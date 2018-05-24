@@ -25,10 +25,11 @@
     "project_version": "self.version"
   },
   "require": {
-    "typo3/cms-core": ">=8.7.0",
+    "typo3/cms": ">=8.7.0",
     "php": ">=7.0"
   },
   "require-dev": {
+    "nimut/testing-framework": "~3.0.7",
     "phpunit/phpunit": "~6.5"
   },
   "autoload": {
