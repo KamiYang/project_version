@@ -3,7 +3,7 @@
   "type": "typo3-cms-extension",
   "description": "Displays current project version based on 'VERSION' file or GIT revision.",
   "homepage": "https://github.com/KamiYang/project_version",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "time": "2018-05-24",
   "license": "GPL-3.0+",
   "keywords": [
