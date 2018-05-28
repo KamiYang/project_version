@@ -38,7 +38,7 @@ class ProjectVersionSlotTest extends UnitTestCase
     /**
      * @test
      */
-    public function asd()
+    public function getProjectVersionShouldAddProjectVersionAsSystemInformation()
     {
         $title = 'Project Version';
         $version = '9000-rc.69';
