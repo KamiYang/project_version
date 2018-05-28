@@ -20,7 +20,7 @@ class ProjectVersion implements SingletonInterface
     /**
      * @var string $version
      */
-    protected $version = '';
+    protected $version = 'Unknown project version';
 
     /**
      * @return string

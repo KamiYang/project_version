@@ -1,0 +1,2 @@
+# cat=basic/enable; type=string; label=VERSION file path
+versionFilePath = VERSION
