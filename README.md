@@ -35,5 +35,5 @@ Now, this is the easiest part. Create a file called `VERSION` (case sensitive) i
  - [ ] Add ability to configure "VERSION"-file path
  - [ ] GIT revision support
  - [ ] GIT tag/branch based on revision support 
- - [ ] Upload extension to packagist.org
- - [ ] Upload extension to TER
+ - [x] Upload extension to packagist.org
+ - [x] Upload extension to TER
