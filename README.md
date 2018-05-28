@@ -1,4 +1,3 @@
-
 # Project Version (EXT:project_version)  
 
 ## What is project version?
@@ -8,10 +7,10 @@ Project version is a TYPO3  extension that adds an entry to the TYPO3 system inf
 First make sure you match the requirements:
 | Requirement | Version |
 |--|--|
-| TYPO3 | >= 8.7.0 |
+| TYPO3 | >= 8.7.0 <=8.7.15 |
 | php | >= 7.0 |
 
-### Composer (recommended) *coming soon*
+### Composer (recommended)
 Simply require the extension from packagist: 
 `composer require kamiyang/ext-projectversion`
 
