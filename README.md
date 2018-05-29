@@ -31,8 +31,9 @@ Now, this is the easiest part. Create a file called `VERSION` (case sensitive) i
 ## Roadmap to v1.0.0
  
  - [x] Static VERSION file support
- - [ ] Add ability to configure "VERSION"-file path
+ - [x] Add ability to configure "VERSION"-file path
  - [ ] GIT revision support
- - [ ] GIT tag/branch based on revision support 
+ - [ ] GIT tag/branch based on revision support
+ - [ ] Add documentation of this extensions features
  - [x] Upload extension to packagist.org
  - [x] Upload extension to TER
