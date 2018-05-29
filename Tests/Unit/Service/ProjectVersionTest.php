@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Tests\Service;
+namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -9,7 +9,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * Class ProjectVersionTest
  *
- * @package KamiYang\ProjectVersion\Tests\Service
+ * @package KamiYang\ProjectVersion\Tests\Unit\Service
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionTest extends UnitTestCase
@@ -53,7 +53,7 @@ class ProjectVersionTest extends UnitTestCase
     public function getVersionShouldReturnInitialValue()
     {
         static::assertSame(
-            '',
+            'Unknown project version',
             $this->subject->getVersion()
         );
     }
