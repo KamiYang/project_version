@@ -6,7 +6,6 @@ namespace KamiYang\ProjectVersion\Service;
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProjectVersionService
@@ -21,8 +20,7 @@ class ProjectVersionService implements SingletonInterface
      */
     public function getProjectVersion(): ProjectVersion
     {
-        $projectVersion = GeneralUtility::makeInstance(ObjectManager::class)
-            ->get(ProjectVersion::class);
+        $projectVersion = GeneralUtility::makeInstance(ProjectVersion::class);
 
         $this->setVersionFromFile($projectVersion);
 
