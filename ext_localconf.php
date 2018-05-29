@@ -3,9 +3,12 @@ defined('TYPO3_MODE') or die();
 
 call_user_func(function (string $extKey) {
     if (TYPO3_MODE === 'BE') {
+        //Fetch ExtensionConfiguration
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \KamiYang\ProjectVersion\Configuration\ExtensionConfiguration::class
+        );
 
-        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\KamiYang\ProjectVersion\Configuration\ExtensionConfiguration::class);
-
+        // Add project version to SystemInformation
         $signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             \TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class
         );

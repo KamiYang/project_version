@@ -16,7 +16,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 final class ExtensionConfiguration implements SingletonInterface
 {
     /**
-     * Extension configuration
+     * Extension configuration.
      *
      * @var array
      */
