@@ -85,10 +85,19 @@ final class ExtensionConfiguration implements SingletonInterface
     {
         $pathFromConfiguration = self::$configuration['versionFilePath'] ?? '';
 
-        if (StringUtility::endsWith($pathFromConfiguration, '/') === true) {
+        if (empty($pathFromConfiguration) || $this->isDirectory($pathFromConfiguration)) {
             $pathFromConfiguration .= 'VERSION';
         }
 
-        return $pathFromConfiguration ?? '';
+        return $pathFromConfiguration;
+    }
+
+    /**
+     * @param string $pathFromConfiguration
+     * @return bool
+     */
+    private function isDirectory(string $pathFromConfiguration): bool
+    {
+        return StringUtility::endsWith($pathFromConfiguration, '/') === true;
     }
 }
