@@ -5,10 +5,11 @@ Project version is a TYPO3  extension that adds an entry to the TYPO3 system inf
 
 ## How do I install it? 
 First make sure you match the requirements:
+
 | Requirement | Version |
-|--|--|
-| TYPO3 | >= 8.7.0 <=8.7.15 |
-| php | >= 7.0 |
+| --- | --- |
+| TYPO3 | \>= 8.7.0 \<=8.7.15 |
+| php | \>= 7.0 |
 
 ### Composer (recommended)
 Simply require the extension from packagist: 
