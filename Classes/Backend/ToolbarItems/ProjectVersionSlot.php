@@ -27,7 +27,7 @@ final class ProjectVersionSlot implements SingletonInterface
         $pObj->addSystemInformation(
             $projectVersion->getTitle(),
             $projectVersion->getVersion(),
-            '' //@todo create an icon
+            $projectVersion->getIconIdentifier()
         );
     }
 }

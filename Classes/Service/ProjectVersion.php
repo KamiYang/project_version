@@ -26,6 +26,12 @@ class ProjectVersion implements SingletonInterface
     protected $version = self::UNKNOWN_VERSION;
 
     /**
+     * @var string
+     * @todo default icon for version file
+     */
+    protected $iconIdentifier = '';
+
+    /**
      * @return string
      */
     public function getTitle(): string
@@ -55,5 +61,21 @@ class ProjectVersion implements SingletonInterface
     public function setVersion(string $version)
     {
         $this->version = $version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIconIdentifier(): string
+    {
+        return $this->iconIdentifier;
+    }
+
+    /**
+     * @param string $iconIdentifier
+     */
+    public function setIconIdentifier(string $iconIdentifier)
+    {
+        $this->iconIdentifier = $iconIdentifier;
     }
 }
