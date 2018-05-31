@@ -1,2 +1,5 @@
 # cat=basic/enable; type=string; label=VERSION file path
 versionFilePath = VERSION
+
+# cat=basic/enable; type=options[VERSION File=0,GIT=1,GIT (VERSION file as fallback)=2]; label=Get project version by:
+mode = 0

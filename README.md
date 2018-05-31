@@ -50,6 +50,7 @@ We assume that the web document root (`PATH_site`) is `/var/www/html`.
  - [ ] GIT revision support
  - [ ] GIT tag/branch based on revision support
  - [ ] Add documentation of this extensions features
+ - [ ] Extension Icon
  - [x] Upload extension to packagist.org
  - [x] Upload extension to TER
 

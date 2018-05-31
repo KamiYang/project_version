@@ -30,6 +30,14 @@ final class ExtensionConfiguration implements SingletonInterface
     private static $versionFilePath = '';
 
     /**
+     * Indicator for the fetching method.
+     *
+     * @var string
+     * @see \KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration
+     */
+    private static $mode = 0;
+
+    /**
      * Fetch absolute version filename.
      *
      * @return string
@@ -48,6 +56,14 @@ final class ExtensionConfiguration implements SingletonInterface
     }
 
     /**
+     * @return string
+     */
+    public  static function getMode(): string
+    {
+        return self::$mode;
+    }
+
+    /**
      * Returns entire extension configuration.
      *
      * @return array
@@ -62,6 +78,7 @@ final class ExtensionConfiguration implements SingletonInterface
         self::$configuration = $this->getExtensionConfigurationFromGlobals();
 
         self::$versionFilePath = $this->resolveVersionFilePath();
+        self::$mode = self::$configuration['mode'];
     }
 
     /**
