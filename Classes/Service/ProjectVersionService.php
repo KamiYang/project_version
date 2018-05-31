@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace KamiYang\ProjectVersion\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
+use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -22,7 +25,23 @@ class ProjectVersionService implements SingletonInterface
     {
         $projectVersion = GeneralUtility::makeInstance(ProjectVersion::class);
 
-        $this->setVersionFromFile($projectVersion);
+        switch (ExtensionConfiguration::getMode()) {
+            case ProjectVersionModeEnumeration::GIT:
+                $this->setVersionFromGit($projectVersion);
+                break;
+            case ProjectVersionModeEnumeration::GIT_FILE_FALLBACK:
+                $this->setVersionFromGit($projectVersion);
+
+                if ($projectVersion->getVersion() !== ProjectVersion::UNKNOWN_VERSION) {
+                    //if version is still unknown, try to resolve version by file
+                    $this->setVersionFromFile($projectVersion);
+                }
+                break;
+            case ProjectVersionModeEnumeration::FILE:
+            default:
+                $this->setVersionFromFile($projectVersion);
+        }
+
 
         return $projectVersion;
     }
@@ -39,5 +58,26 @@ class ProjectVersionService implements SingletonInterface
             $versionFileContent = \file_get_contents($versionFilePath);
             $projectVersion->setVersion($versionFileContent);
         }
+    }
+
+    /**
+     * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
+     */
+    private function setVersionFromGit(ProjectVersion $projectVersion)
+    {
+        if ($this->isGitAvailable() === false) {
+            return;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isGitAvailable(): bool
+    {
+        return SystemEnvironmentBuilder::isFunctionDisabled('exec') === false &&
+            // check if git exists
+            CommandUtility::exec('git --version', $_, $returnCode) &&
+            $returnCode === 0;
     }
 }

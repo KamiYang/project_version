@@ -13,14 +13,17 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class ProjectVersion implements SingletonInterface
 {
+    const UNKNOWN_VERSION = 'Unknown project version';
+
     /**
      * @var string $title
      */
     protected $title = 'Project Version';
+
     /**
      * @var string $version
      */
-    protected $version = 'Unknown project version';
+    protected $version = self::UNKNOWN_VERSION;
 
     /**
      * @return string

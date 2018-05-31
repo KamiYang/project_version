@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Type\Enumeration;
  * @package KamiYang\ProjectVersion\Enumeration
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
-class ProjectVersionModeEnumeration extends Enumeration
+final class ProjectVersionModeEnumeration extends Enumeration
 {
     const __default = self::FILE;
 
