@@ -13,7 +13,8 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * @see \TYPO3\CMS\Core\Utility\CommandUtility
  * @internal
  * @package KamiYang\ProjectVersion\Facade
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
+ * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
+ * @codeCoverageIgnore
  */
 class CommandUtilityFacade implements SingletonInterface
 {

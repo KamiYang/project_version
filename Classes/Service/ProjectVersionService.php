@@ -7,9 +7,8 @@ use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
 use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -24,6 +23,11 @@ class ProjectVersionService implements SingletonInterface
      * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
      */
     protected $commandUtilityFacade;
+
+    /**
+     * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade
+     */
+    protected $systemEnvironmentBuilderFacade;
 
     /**
      * @api
@@ -72,9 +76,12 @@ class ProjectVersionService implements SingletonInterface
      *
      * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtilityFacade
      */
-    public function __construct(CommandUtilityFacade $commandUtilityFacade)
-    {
+    public function __construct(
+        CommandUtilityFacade $commandUtilityFacade,
+        SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade
+    ) {
         $this->commandUtilityFacade = $commandUtilityFacade;
+        $this->systemEnvironmentBuilderFacade = $systemEnvironmentBuilderFacade;
     }
 
     /**
@@ -86,7 +93,7 @@ class ProjectVersionService implements SingletonInterface
             return;
         }
 
-        $version = $this->formatGitVersion();
+        $version = $this->getVersionByFormat();
 
         if (!empty($version)) {
             $projectVersion->setVersion($version);
@@ -99,20 +106,20 @@ class ProjectVersionService implements SingletonInterface
      */
     private function isGitAvailable(): bool
     {
-        return SystemEnvironmentBuilder::isFunctionDisabled('exec') === false &&
+        return $this->systemEnvironmentBuilderFacade->isFunctionDisabled('exec') === false &&
             // check if git exists
-            CommandUtility::exec('git --version', $_, $returnCode) &&
+            $this->commandUtilityFacade->exec('git --version', $_, $returnCode) &&
             $returnCode === 0;
     }
 
     /**
      * @return string
      */
-    private function formatGitVersion(): string
+    private function getVersionByFormat(): string
     {
-        $branch = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_BRANCH));
-        $revision = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_REVISION));
-        $tag = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_TAG));
+        $branch = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_BRANCH));
+        $revision = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_REVISION));
+        $tag = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_TAG));
 
         switch (ExtensionConfiguration::getGitFormat()) {
             case GitCommandEnumeration::FORMAT_REVISION:

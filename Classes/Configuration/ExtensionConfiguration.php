@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  * Class ExtensionConfiguration
  *
  * @package KamiYang\ProjectVersion\Configuration
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
+ * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
  */
 final class ExtensionConfiguration implements SingletonInterface
 {

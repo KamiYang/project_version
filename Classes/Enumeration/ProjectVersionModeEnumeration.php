@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\Type\Enumeration;
  * Class ProjectVersionModeEnumeration
  *
  * @package KamiYang\ProjectVersion\Enumeration
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
+ * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
  */
 final class ProjectVersionModeEnumeration extends Enumeration
 {
