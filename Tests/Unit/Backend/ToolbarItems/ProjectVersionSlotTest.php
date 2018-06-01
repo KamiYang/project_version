@@ -9,6 +9,7 @@ use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProjectVersionSlotTest
@@ -58,6 +59,11 @@ class ProjectVersionSlotTest extends UnitTestCase
         $projectVersionServiceProphecy->getProjectVersion()
             ->willReturn($projectVersionProphecy->reveal());
 
+        $objectManagerProphecy = $this->prophesize(ObjectManager::class);
+        $objectManagerProphecy->get(ProjectVersionService::class)
+            ->willReturn($projectVersionServiceProphecy->reveal());
+
+        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManagerProphecy->reveal());
         GeneralUtility::setSingletonInstance(ProjectVersionService::class, $projectVersionServiceProphecy->reveal());
 
         $this->subject->getProjectVersion($systemInformationToolbarItemProphecy->reveal());

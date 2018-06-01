@@ -7,6 +7,7 @@ use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProjectVersionSlot
@@ -21,7 +22,8 @@ final class ProjectVersionSlot implements SingletonInterface
      */
     public function getProjectVersion(SystemInformationToolbarItem $pObj)
     {
-        $projectVersion = GeneralUtility::makeInstance(ProjectVersionService::class)
+        $projectVersion = GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(ProjectVersionService::class)
             ->getProjectVersion();
 
         $pObj->addSystemInformation(

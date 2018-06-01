@@ -69,4 +69,24 @@ class ProjectVersionTest extends UnitTestCase
 
         static::assertAttributeSame($newValue, 'version', $this->subject);
     }
+
+    /**
+     * @test
+     */
+    public function getIconIdentifierShouldReturnInitialValue()
+    {
+        static::assertSame('', $this->subject->getIconIdentifier());
+    }
+
+    /**
+     * @test
+     */
+    public function setIconIdentifierShouldSetPropertyIconIdentifier()
+    {
+        $newValue = 'Project Version is awesome!';
+
+        $this->subject->setIconIdentifier($newValue);
+
+        static::assertAttributeSame($newValue, 'iconIdentifier', $this->subject);
+    }
 }

@@ -5,6 +5,7 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
+use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -31,8 +32,8 @@ class ProjectVersionServiceTest extends UnitTestCase
 
     protected function setUp()
     {
-        $this->subject = new ProjectVersionService();
-
+        $commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
+        $this->subject = new ProjectVersionService($commandUtilityFacadeProphecy->reveal());
     }
 
     protected function tearDown()

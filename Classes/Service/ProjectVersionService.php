@@ -6,6 +6,7 @@ namespace KamiYang\ProjectVersion\Service;
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
+use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\CommandUtility;
@@ -19,6 +20,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProjectVersionService implements SingletonInterface
 {
+    /**
+     * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
+     */
+    protected $commandUtilityFacade;
+
     /**
      * @api
      */
@@ -62,6 +68,16 @@ class ProjectVersionService implements SingletonInterface
     }
 
     /**
+     * ProjectVersionService constructor.
+     *
+     * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtilityFacade
+     */
+    public function __construct(CommandUtilityFacade $commandUtilityFacade)
+    {
+        $this->commandUtilityFacade = $commandUtilityFacade;
+    }
+
+    /**
      * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
      */
     private function setVersionFromGit(ProjectVersion $projectVersion)
@@ -94,25 +110,25 @@ class ProjectVersionService implements SingletonInterface
      */
     private function formatGitVersion(): string
     {
+        $branch = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_BRANCH));
+        $revision = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_REVISION));
+        $tag = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_TAG));
+
         switch (ExtensionConfiguration::getGitFormat()) {
             case GitCommandEnumeration::FORMAT_REVISION:
-                $format = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_REVISION));
+                $format = $revision;
                 break;
             case GitCommandEnumeration::FORMAT_REVISION_TAG:
-                $revision = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_REVISION));
-                $tag = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_TAG));
                 $format = \sprintf('[%s] %s', $revision, $tag);
                 break;
             case GitCommandEnumeration::FORMAT_BRANCH:
-                $format = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_BRANCH));
+                $format = $branch;
                 break;
             case GitCommandEnumeration::FORMAT_TAG:
-                $format = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_TAG));
+                $format = $tag;
                 break;
             case GitCommandEnumeration::FORMAT_REVISION_BRANCH:
             default:
-                $revision = trim(CommandUtility::exec(GitCommandEnumeration::CMD_REVISION));
-                $branch = trim(CommandUtility::exec(GitCommandEnumeration::CMD_BRANCH));
                 $format = \sprintf('[%s] %s', $revision, $branch);
         }
 
