@@ -76,16 +76,6 @@ final class ExtensionConfiguration implements SingletonInterface
         return self::$gitFormat;
     }
 
-    /**
-     * Returns entire extension configuration.
-     *
-     * @return array
-     */
-    public static function getConfiguration(): array
-    {
-        return self::$configuration;
-    }
-
     public function __construct()
     {
         self::$configuration = $this->getExtensionConfigurationFromGlobals();

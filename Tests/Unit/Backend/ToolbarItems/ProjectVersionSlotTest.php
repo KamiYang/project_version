@@ -42,6 +42,7 @@ class ProjectVersionSlotTest extends UnitTestCase
     {
         $title = 'Project Version';
         $version = '9000-rc.69';
+        $iconIdentifier = '';
 
         $systemInformationToolbarItemProphecy = $this->prophesize(SystemInformationToolbarItem::class);
 
@@ -50,6 +51,8 @@ class ProjectVersionSlotTest extends UnitTestCase
             ->willReturn($title);
         $projectVersionProphecy->getVersion()
             ->willReturn($version);
+        $projectVersionProphecy->getIconIdentifier()
+            ->willReturn($iconIdentifier);
 
         $projectVersionServiceProphecy = $this->prophesize(ProjectVersionService::class);
         $projectVersionServiceProphecy->getProjectVersion()
@@ -63,7 +66,9 @@ class ProjectVersionSlotTest extends UnitTestCase
             ->shouldHaveBeenCalledTimes(1);
         $projectVersionProphecy->getVersion()
             ->shouldHaveBeenCalledTimes(1);
-        $systemInformationToolbarItemProphecy->addSystemInformation($title, $version, '')
+        $projectVersionProphecy->getIconIdentifier()
+            ->shouldHaveBeenCalledTimes(1);
+        $systemInformationToolbarItemProphecy->addSystemInformation($title, $version, $iconIdentifier)
             ->shouldHaveBeenCalledTimes(1);
     }
 }

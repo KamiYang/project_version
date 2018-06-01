@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
+use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -24,7 +25,8 @@ class ProjectVersionServiceTest extends UnitTestCase
     private $subject;
 
     private $extensionConfiguration = [
-        'versionFilePath' => 'VERSION'
+        'versionFilePath' => 'VERSION',
+        'mode' => ProjectVersionModeEnumeration::FILE
     ];
 
     protected function setUp()
