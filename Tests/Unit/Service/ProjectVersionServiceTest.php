@@ -5,12 +5,12 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
-use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
 use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\Promise\CallbackPromise;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -31,20 +31,25 @@ class ProjectVersionServiceTest extends UnitTestCase
         'versionFilePath' => 'VERSION',
         'mode' => ProjectVersionModeEnumeration::FILE
     ];
-    /**
-     * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade|\Prophecy\Prophecy\ObjectProphecy
-     */
-    private $commandUtilityFacadeProphecy;
 
     /**
      * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade|\Prophecy\Prophecy\ObjectProphecy
      */
     private $systemEnvironmentBuilderFacadeProphecy;
 
+    private $projectVersionService;
+
     protected function setUp()
     {
-        $this->commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
         $this->systemEnvironmentBuilderFacadeProphecy = $this->prophesize(SystemEnvironmentBuilderFacade::class);
+
+        $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
+            ->willReturn(false);
+
+
+        $this->subject = new ProjectVersionService(
+            $this->systemEnvironmentBuilderFacadeProphecy->reveal()
+        );
     }
 
     protected function tearDown()
@@ -66,7 +71,6 @@ class ProjectVersionServiceTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
 
         $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
             $this->systemEnvironmentBuilderFacadeProphecy->reveal()
         );
         $subject->getProjectVersion();
@@ -88,11 +92,7 @@ class ProjectVersionServiceTest extends UnitTestCase
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
         GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
 
-        $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            $this->systemEnvironmentBuilderFacadeProphecy->reveal()
-        );
-        $subject->getProjectVersion();
+        $this->subject->getProjectVersion();
 
         $projectVersionProphecy->setVersion(Argument::containingString('1.0.1'))
             ->shouldHaveBeenCalledTimes(1);
@@ -119,7 +119,7 @@ class ProjectVersionServiceTest extends UnitTestCase
     /**
      * @test
      */
-    public function getProjectVersionShouldNotSetVersionFromGITIfCommandIsNotAvailable()
+    public function getProjectVersionShouldNotSetVersionFromGitIfCommandExecIsNotAvailable()
     {
         $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::GIT;
         $this->setUpExtensionConfiguration();
@@ -131,7 +131,6 @@ class ProjectVersionServiceTest extends UnitTestCase
             ->willReturn(true);
 
         $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
             $this->systemEnvironmentBuilderFacadeProphecy->reveal()
         );
         $subject->getProjectVersion();

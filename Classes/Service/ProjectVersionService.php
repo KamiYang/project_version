@@ -6,9 +6,9 @@ namespace KamiYang\ProjectVersion\Service;
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
-use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
 use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -19,10 +19,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProjectVersionService implements SingletonInterface
 {
-    /**
-     * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
-     */
-    protected $commandUtilityFacade;
 
     /**
      * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade
@@ -76,11 +72,8 @@ class ProjectVersionService implements SingletonInterface
      *
      * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtilityFacade
      */
-    public function __construct(
-        CommandUtilityFacade $commandUtilityFacade,
-        SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade
-    ) {
-        $this->commandUtilityFacade = $commandUtilityFacade;
+    public function __construct(SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade)
+    {
         $this->systemEnvironmentBuilderFacade = $systemEnvironmentBuilderFacade;
     }
 
@@ -108,7 +101,7 @@ class ProjectVersionService implements SingletonInterface
     {
         return $this->systemEnvironmentBuilderFacade->isFunctionDisabled('exec') === false &&
             // check if git exists
-            $this->commandUtilityFacade->exec('git --version', $_, $returnCode) &&
+            CommandUtility::exec('git --version', $_, $returnCode) &&
             $returnCode === 0;
     }
 
@@ -117,9 +110,9 @@ class ProjectVersionService implements SingletonInterface
      */
     private function getVersionByFormat(): string
     {
-        $branch = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_BRANCH));
-        $revision = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_REVISION));
-        $tag = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_TAG));
+        $branch = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_BRANCH));
+        $revision = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_REVISION));
+        $tag = \trim(CommandUtility::exec(GitCommandEnumeration::CMD_TAG));
 
         switch (ExtensionConfiguration::getGitFormat()) {
             case GitCommandEnumeration::FORMAT_REVISION:

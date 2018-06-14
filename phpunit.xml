@@ -12,8 +12,11 @@
         </testsuite>
     </testsuites>
     <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+        <whitelist>
             <directory suffix=".php">Classes/</directory>
+            <exclude>
+                <directory suffix=".php">Classes/Facade/</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
