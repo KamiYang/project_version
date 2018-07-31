@@ -8,7 +8,7 @@ First make sure you match the requirements:
 
 | Requirement | Version |
 | --- | --- |
-| TYPO3 | \>= 8.7.0 \<=8.7.16 |
+| TYPO3 | \>= 8.7.0 \<=8.7.18 |
 | php | \>= 7.0 |
 
 ### Composer (recommended)
