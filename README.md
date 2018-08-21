@@ -82,5 +82,5 @@ The configuration screen will look like this on default:
  - [x] Upload extension to packagist.org
  - [x] Upload extension to TER
 
-### Milestone for v0.4.0
+### Milestone for v0.5.0
 The next milestone is the documentation of various use cases and possibilities and achieve a higher coverage. Current coverage is about ~70%. 
