@@ -3,12 +3,11 @@
   "type": "typo3-cms-extension",
   "description": "Displays current project version based on 'VERSION' file or GIT revision.",
   "homepage": "https://github.com/KamiYang/project_version",
-  "version": "0.4.1",
-  "time": "2018-08-21",
+  "version": "0.4.2-dev",
+  "time": "2018-09-10T16:30:52+02:00",
   "license": "GPL-3.0+",
   "keywords": [
-    "TYPO3",
-    "CMS",
+    "TYPO3 CMS",
     "typo3",
     "GIT",
     "git",
@@ -25,7 +24,7 @@
     "project_version": "self.version"
   },
   "require": {
-    "typo3/cms": ">=8.7.0 <=8.7.19",
+    "typo3/cms-backend": "^8.7",
     "php": ">=7.0"
   },
   "require-dev": {
@@ -34,12 +33,30 @@
   },
   "autoload": {
     "psr-4": {
-      "KamiYang\\ProjectVersion\\": "Classes"
+      "KamiYang\\ProjectVersion\\": "Classes/"
     }
   },
   "autoload-dev": {
     "psr-4": {
       "KamiYang\\ProjectVersion\\Tests\\": "Tests/"
+    }
+  },
+  "scripts": {
+    "link-package": "ln -snvf ../../../../. .Build/web/typo3conf/ext/project_version",
+    "post-install-cmd": [
+      "@link-package"
+    ]
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin"
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "project_version",
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "app-dir": ".Build",
+      "web-dir": ".Build/web"
     }
   }
 }
