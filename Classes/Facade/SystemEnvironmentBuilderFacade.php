@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
  * @see \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder
  * @internal
  * @package KamiYang\ProjectVersion\Facade
- * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
+ * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class SystemEnvironmentBuilderFacade
 {

@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\Type\Enumeration;
  * Class GitCommandEnumeration
  *
  * @package KamiYang\ProjectVersion\Enumeration
- * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
+ * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class GitCommandEnumeration extends Enumeration
 {

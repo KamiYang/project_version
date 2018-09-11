@@ -13,7 +13,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * Class ProjectVersionSlot
  *
  * @package KamiYang\ProjectVersion\Backend\ToolbarItems
- * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
+ * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class ProjectVersionSlot implements SingletonInterface
 {

@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class ProjectVersionService
  *
  * @package KamiYang\ProjectVersion\Service
- * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
+ * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersionService implements SingletonInterface
 {

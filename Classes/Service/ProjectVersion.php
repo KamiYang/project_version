@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\SingletonInterface;
  * Class ProjectVersion
  *
  * @package KamiYang\ProjectVersion\Service
- * @author Jan Stockfisch <jan.stockfisch@googlemail.com>
+ * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersion implements SingletonInterface
 {
