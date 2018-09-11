@@ -5,7 +5,7 @@
   "homepage": "https://github.com/KamiYang/project_version",
   "version": "0.4.2-dev",
   "time": "2018-09-10T16:30:52+02:00",
-  "license": "GPL-3.0+",
+  "license": "GPL-3.0-or-later",
   "keywords": [
     "TYPO3 CMS",
     "typo3",
