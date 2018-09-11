@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
+use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
 use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;

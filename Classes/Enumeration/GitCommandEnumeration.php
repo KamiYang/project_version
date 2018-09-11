@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Enumeration;
 
-use TYPO3\CMS\Core\Type\Enumeration;
-
 /**
  * Class GitCommandEnumeration
  *
  * @package KamiYang\ProjectVersion\Enumeration
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
-final class GitCommandEnumeration extends Enumeration
+final class GitCommandEnumeration
 {
     const CMD_BRANCH = 'git rev-parse --abbrev-ref HEAD';
     const CMD_REVISION = 'git rev-parse --short HEAD';

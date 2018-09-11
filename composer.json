@@ -22,11 +22,12 @@
     "project_version": "self.version"
   },
   "require": {
-    "typo3/cms-backend": "^8.7",
+    "typo3/cms-backend": ">=8.7.0 <9 || >=9.4.0 <9.5",
+    "typo3/cms-extensionmanager": ">=8.7.0 <9 || >=9.4.0 <9.5",
     "php": ">=7.0"
   },
   "require-dev": {
-    "nimut/testing-framework": "~3.0.7",
+    "nimut/testing-framework": "~4.1.1",
     "phpunit/phpunit": "~6.5"
   },
   "autoload": {
@@ -40,11 +41,13 @@
     }
   },
   "scripts": {
+    "create-dummy-version-file": "echo \"9.0.42\" > .Build/web/VERSION",
     "create-extension-directory": "mkdir -p .Build/web/typo3conf/ext",
     "link-package": "ln -snvf ../../../../. .Build/web/typo3conf/ext/project_version",
     "post-update-cmd": [
       "@create-extension-directory",
-      "@link-package"
+      "@link-package",
+      "@create-dummy-version-file"
     ]
   },
   "config": {

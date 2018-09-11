@@ -3,18 +3,14 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Enumeration;
 
-use TYPO3\CMS\Core\Type\Enumeration;
-
 /**
  * Class ProjectVersionModeEnumeration
  *
  * @package KamiYang\ProjectVersion\Enumeration
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
-final class ProjectVersionModeEnumeration extends Enumeration
+final class ProjectVersionModeEnumeration
 {
-    const __default = self::FILE;
-
     const FILE = '0';
     const GIT = '1';
     const GIT_FILE_FALLBACK = '2';
