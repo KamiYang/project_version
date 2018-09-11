@@ -3,8 +3,6 @@
   "type": "typo3-cms-extension",
   "description": "Displays current project version based on 'VERSION' file or GIT revision.",
   "homepage": "https://github.com/KamiYang/project_version",
-  "version": "0.4.2-dev",
-  "time": "2018-09-10T16:30:52+02:00",
   "license": "GPL-3.0-or-later",
   "keywords": [
     "TYPO3 CMS",
@@ -42,8 +40,10 @@
     }
   },
   "scripts": {
+    "create-extension-directory": "mkdir -p .Build/web/typo3conf/ext",
     "link-package": "ln -snvf ../../../../. .Build/web/typo3conf/ext/project_version",
-    "post-install-cmd": [
+    "post-update-cmd": [
+      "@create-extension-directory",
       "@link-package"
     ]
   },
