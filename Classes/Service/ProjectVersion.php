@@ -27,9 +27,8 @@ class ProjectVersion implements SingletonInterface
 
     /**
      * @var string
-     * @todo default icon for version file
      */
-    protected $iconIdentifier = '';
+    protected $iconIdentifier = 'information-project-version';
 
     /**
      * @return string
