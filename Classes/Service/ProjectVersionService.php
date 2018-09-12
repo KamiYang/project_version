@@ -19,7 +19,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProjectVersionService implements SingletonInterface
 {
-
     /**
      * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade
      */

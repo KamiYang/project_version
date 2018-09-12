@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Configuration;
 
+use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -35,7 +36,7 @@ final class ExtensionConfiguration implements SingletonInterface
      * @var string
      * @see \KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration
      */
-    private static $mode = 0;
+    private static $mode = ProjectVersionModeEnumeration::FILE;
 
     /**
      * @var string
