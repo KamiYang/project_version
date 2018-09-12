@@ -8,26 +8,24 @@ First make sure you match the requirements:
 
 | Requirement | Version |
 | --- | --- |
-| TYPO3 | \>= 8.7.0 \<=8.7.19 |
+| TYPO3 | \>=8.7.0 \<=8.7.19 &#124;&#124; >=9.4.0 <9.5 |
 | php | \>= 7.0 |
 
-### Composer (recommended)
+### Composer
 Simply require the extension from packagist: 
 `composer require kamiyang/ext-projectversion`
 
 Or if you prefer typo3-ter:
 `composer require typo3-ter/projectversion`
 
-### GIT
-Go into your `typo3conf/ext/` folder and clone the project directly from github:
-`git clone git@github.com:KamiYang/project_version.git`
-
-You now only have to manually activate the extension in your Extension Manager.
+### TER
+No composer available? No problem! You also can find this extension at TYPO3's Extension Repository (TER).
+You can straight download it from inside your TYPO3 as long, as your TYPO3 is not in composer mode. 
 
 ## How do I use it?
 ### "VERSION"-file
 Now, this is the easiest part. Create a file called `VERSION` (case sensitive) in your TYPO3 frontend docroot with the project version. This can be done like this: 
-`/var/www/html$ echo 1.0.0-rc.3 > VERSION`
+`$ echo 1.0.0-rc.3 > /var/www/html/VERSION`
 
 ### Custom Path
 You can use your own filename and path. Note that this path still has to be accessible from your web docroot.
@@ -45,11 +43,16 @@ We assume that the web document root (`PATH_site`) is `/var/www/html`.
 
 ### GIT
 Since release 0.3.0 git is supported. This must be manually activated. In order to use git, make sure it's available!
-Common case is that the local development environment is based on docker images. Many docker images do not have git available.
-To activate it, simply move via your preferred web browser into the TYPO3 backend. Go to "Extensions > Project Version" and configure the extension.
+Common case is that the local development environment is based on docker images. Many docker images do not have git out of the box available.
+To activate it, simply move via your preferred web browser into the TYPO3 backend. For TYPO3 v8.7 - go to "Extensions > Project Version" and configure the extension.
 The configuration screen will look like this on default: 
 
 ![default extension configuration](Documentation/Images/DefaultConfig.png)
+
+This has changed a bit in TYPO3 v9. To configure the extension go to "Settings > Configure extensions" and filter for "project version".
+The new configuration screen will look like this:
+
+![new default extension configuration screen](Documentation/Images/DefaultConfigTYPO3v9.png)
 
 #### Configuration possibilities
 
@@ -81,6 +84,15 @@ The configuration screen will look like this on default:
  - [ ] Add documentation of this extensions features
  - [x] Upload extension to packagist.org
  - [x] Upload extension to TER
+ - [x] Support TYPO3 v9.4
+ - [ ] Support TYPO3 v9 LTS
 
-### Milestone for v0.5.0
+### Milestone for v0.6.0
 The next milestone is the documentation of various use cases and possibilities and achieve a higher coverage. Current coverage is about ~70%. 
+
+## Note
+
+The TYPO3 v8 version of this extension will not be maintained after release 1.0.0! But this should be no problem because TYPO3 v8 only gets bugfixes.
+This means, version 1.0.0 should stay compatible with all further TYPO3 v8 releases!
+
+After releasing version 1.0.0, which will be around the release of the first TYPO3 v9 LTS version, EXT:project_version will be refactored to php7.2 and will integrate TYPO3 v9 features.
