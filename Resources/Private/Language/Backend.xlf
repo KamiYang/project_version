@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns:t3="http://typo3.org/schemas/xliff">
+	<file t3:id="1536762476" source-language="en" datatype="plaintext" original="messages"
+		  date="2018-09-12T16:27:38+02:00" product-name="project_version">
+		<header/>
+		<body>
+			<trans-unit id="toolbarItems.sysinfo.project-version">
+				<source>Project Version</source>
+			</trans-unit>
+			<trans-unit id="toolbarItems.sysinfo.project-version.unknown">
+				<source>Unknown project version</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

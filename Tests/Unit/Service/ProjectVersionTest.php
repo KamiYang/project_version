@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
+use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Class ProjectVersionTest
@@ -30,7 +33,7 @@ class ProjectVersionTest extends UnitTestCase
     public function getTitleShouldReturnInitialValue()
     {
         static::assertSame(
-            'Project Version',
+            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version',
             $this->subject->getTitle()
         );
     }
@@ -50,12 +53,34 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function getVersionShouldReturnInitialValue()
+    public function initialVersionValueShouldBeLLLString()
     {
-        static::assertSame(
-            'Unknown project version',
-            $this->subject->getVersion()
+        static::assertAttributeSame(
+            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown',
+            'version',
+            $this->subject
         );
+    }
+
+    /**
+     * @test
+     */
+    public function getVersionShouldReturnCurrentVersionAndLocalizeItIfNecessary()
+    {
+        $initialVersionValue = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
+        $expected = 'Unknown project version ';
+
+        $localizationUtilityFacadeProphecy = $this->prophesize(LocalizationUtilityFacade::class);
+        $localizationUtilityFacadeProphecy->translate($initialVersionValue)
+            ->shouldBeCalledTimes(1)
+            ->willReturn($expected);
+
+        GeneralUtility::addInstance(
+            LocalizationUtilityFacade::class,
+            $localizationUtilityFacadeProphecy->reveal()
+        );
+
+        static::assertSame($expected, $this->subject->getVersion());
     }
 
     /**
@@ -75,7 +100,7 @@ class ProjectVersionTest extends UnitTestCase
      */
     public function getIconIdentifierShouldReturnInitialValue()
     {
-        static::assertSame('', $this->subject->getIconIdentifier());
+        static::assertSame('information-project-version', $this->subject->getIconIdentifier());
     }
 
     /**
