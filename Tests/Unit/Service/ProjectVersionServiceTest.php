@@ -5,6 +5,7 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
+use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
 use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
@@ -34,17 +35,22 @@ class ProjectVersionServiceTest extends UnitTestCase
      */
     private $systemEnvironmentBuilderFacadeProphecy;
 
-    private $projectVersionService;
+    /**
+     * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
+     */
+    private $commandUtilityFacadeProphecy;
 
     protected function setUp()
     {
         $this->systemEnvironmentBuilderFacadeProphecy = $this->prophesize(SystemEnvironmentBuilderFacade::class);
-
         $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
             ->willReturn(false);
 
+        $this->commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
+
         $this->subject = new ProjectVersionService(
-            $this->systemEnvironmentBuilderFacadeProphecy->reveal()
+            $this->systemEnvironmentBuilderFacadeProphecy->reveal(),
+            $this->commandUtilityFacadeProphecy->reveal()
         );
     }
 
@@ -66,10 +72,7 @@ class ProjectVersionServiceTest extends UnitTestCase
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
         GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
 
-        $subject = new ProjectVersionService(
-            $this->systemEnvironmentBuilderFacadeProphecy->reveal()
-        );
-        $subject->getProjectVersion();
+        $this->subject->getProjectVersion();
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
@@ -126,10 +129,7 @@ class ProjectVersionServiceTest extends UnitTestCase
         $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
             ->willReturn(true);
 
-        $subject = new ProjectVersionService(
-            $this->systemEnvironmentBuilderFacadeProphecy->reveal()
-        );
-        $subject->getProjectVersion();
+        $this->subject->getProjectVersion();
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
