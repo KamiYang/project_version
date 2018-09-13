@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
 
 use KamiYang\ProjectVersion\Backend\ToolbarItems\ProjectVersionSlot;
+use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -40,40 +41,63 @@ class ProjectVersionSlotTest extends UnitTestCase
      */
     public function getProjectVersionShouldAddProjectVersionAsSystemInformation()
     {
-        $title = 'Project Version';
         $version = '9000-rc.69';
-        $iconIdentifier = '';
+        $title = 'Project Version';
+        $iconIdentifier = 'information-project-version';
+
+        $projectVersion = new ProjectVersion();
+        $projectVersion->setVersion($version);
+        $projectVersion->setTitle($title);
 
         $systemInformationToolbarItemProphecy = $this->prophesize(SystemInformationToolbarItem::class);
 
-        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
-        $projectVersionProphecy->getTitle()
-            ->willReturn($title);
-        $projectVersionProphecy->getVersion()
-            ->willReturn($version);
-        $projectVersionProphecy->getIconIdentifier()
-            ->willReturn($iconIdentifier);
-
         $projectVersionServiceProphecy = $this->prophesize(ProjectVersionService::class);
-        $projectVersionServiceProphecy->getProjectVersion()
-            ->willReturn($projectVersionProphecy->reveal());
+        $projectVersionServiceProphecy->getProjectVersion()->willReturn($projectVersion);
 
         $objectManagerProphecy = $this->prophesize(ObjectManager::class);
-        $objectManagerProphecy->get(ProjectVersionService::class)
-            ->willReturn($projectVersionServiceProphecy->reveal());
+        $objectManagerProphecy->get(ProjectVersionService::class)->willReturn($projectVersionServiceProphecy->reveal());
 
         GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManagerProphecy->reveal());
         GeneralUtility::setSingletonInstance(ProjectVersionService::class, $projectVersionServiceProphecy->reveal());
 
         $this->subject->getProjectVersion($systemInformationToolbarItemProphecy->reveal());
 
-        $projectVersionProphecy->getTitle()
-            ->shouldHaveBeenCalledTimes(1);
-        $projectVersionProphecy->getVersion()
-            ->shouldHaveBeenCalledTimes(1);
-        $projectVersionProphecy->getIconIdentifier()
-            ->shouldHaveBeenCalledTimes(1);
         $systemInformationToolbarItemProphecy->addSystemInformation($title, $version, $iconIdentifier)
+            ->shouldHaveBeenCalledTimes(1);
+    }
+
+
+    /**
+     * @test
+     */
+    public function getProjectVersionShouldResolveCurrentVersionAndLocalizeItIfNecessary()
+    {
+        $initialVersionValue = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
+        $projectVersion = new ProjectVersion();
+        $projectVersion->setVersion($initialVersionValue);
+        $expectedVersion = 'Unknown project version';
+
+        $projectVersionServiceProphecy = $this->prophesize(ProjectVersionService::class);
+        $projectVersionServiceProphecy->getProjectVersion()->willReturn($projectVersion);
+
+        $objectManagerProphecy = $this->prophesize(ObjectManager::class);
+        $objectManagerProphecy->get(ProjectVersionService::class)->willReturn($projectVersionServiceProphecy->reveal());
+
+        $localizationUtilityFacadeProphecy = $this->prophesize(LocalizationUtilityFacade::class);
+        $localizationUtilityFacadeProphecy->translate($initialVersionValue)->willReturn($expectedVersion);
+
+        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManagerProphecy->reveal());
+        GeneralUtility::setSingletonInstance(ProjectVersionService::class, $projectVersionServiceProphecy->reveal());
+        GeneralUtility::addInstance(LocalizationUtilityFacade::class, $localizationUtilityFacadeProphecy->reveal());
+
+        $systemInformationToolbarItemProphecy = $this->prophesize(SystemInformationToolbarItem::class);
+        $actual = $this->subject->getProjectVersion($systemInformationToolbarItemProphecy->reveal());
+
+        $systemInformationToolbarItemProphecy->addSystemInformation(
+            $projectVersion->getTitle(),
+            $expectedVersion,
+            $projectVersion->getIconIdentifier()
+        )
             ->shouldHaveBeenCalledTimes(1);
     }
 }

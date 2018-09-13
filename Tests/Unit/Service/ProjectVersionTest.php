@@ -63,27 +63,6 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function getVersionShouldReturnCurrentVersionAndLocalizeItIfNecessary()
-    {
-        $initialVersionValue = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
-        $expected = 'Unknown project version ';
-
-        $localizationUtilityFacadeProphecy = $this->prophesize(LocalizationUtilityFacade::class);
-        $localizationUtilityFacadeProphecy->translate($initialVersionValue)
-            ->shouldBeCalledTimes(1)
-            ->willReturn($expected);
-
-        GeneralUtility::addInstance(
-            LocalizationUtilityFacade::class,
-            $localizationUtilityFacadeProphecy->reveal()
-        );
-
-        static::assertSame($expected, $this->subject->getVersion());
-    }
-
-    /**
-     * @test
-     */
     public function setVersionShouldSetPropertyVersion()
     {
         $newValue = 'Project Version is awesome!';

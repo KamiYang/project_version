@@ -53,13 +53,7 @@ class ProjectVersion implements SingletonInterface
      */
     public function getVersion(): string
     {
-        $version = $this->version;
-
-        if (StringUtility::beginsWith($version, 'LLL:')) {
-            $version = GeneralUtility::makeInstance(LocalizationUtilityFacade::class)->translate($this->version);
-        }
-
-        return $version;
+        return $this->version;
     }
 
     /**
