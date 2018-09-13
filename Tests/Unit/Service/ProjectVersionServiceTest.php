@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
+use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
 use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
 use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
@@ -112,6 +113,108 @@ class ProjectVersionServiceTest extends UnitTestCase
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
+    }
+
+    /**
+     * @test
+     *
+     * @param string $format
+     * @param string $branch
+     * @param string $revision
+     * @param string $tag
+     * @param string $expected
+     *
+     * @dataProvider gitFormatDataProvider
+     */
+    public function getProjectVersionShouldReturnSpecifiedVersionBasedOnConfiguredGitFormat(
+        string $format,
+        string $branch,
+        string $revision,
+        string $tag,
+        string $expected
+    ) {
+        // Arrange
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::GIT;
+        $this->extensionConfiguration['gitFormat'] = $format;
+        $this->setUpExtensionConfiguration();
+
+        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
+        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_BRANCH)->willReturn($branch);
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_REVISION)->willReturn($revision);
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->willReturn($tag);
+
+        /** @var \KamiYang\ProjectVersion\Service\ProjectVersionService|\PHPUnit\Framework\MockObject\MockObject $subject */
+        $subject = $this->createPartialMock(ProjectVersionService::class, ['isGitAvailable']);
+        $subject->method('isGitAvailable')->willReturn(true);
+        $subject->injectCommandUtilityFacade($this->commandUtilityFacadeProphecy->reveal());
+        $subject->injectSystemEnvironmentBuilderFacade($this->systemEnvironmentBuilderFacadeProphecy->reveal());
+
+        // Act
+        $actual = $subject->getProjectVersion();
+
+        // Assert
+        $projectVersionProphecy->setVersion($expected)->shouldHaveBeenCalled();
+
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_BRANCH)->shouldHaveBeenCalledTimes(1);
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_REVISION)->shouldHaveBeenCalledTimes(1);
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->shouldHaveBeenCalledTimes(1);
+    }
+
+    /**
+     * @return array
+     */
+    public function gitFormatDataProvider(): array
+    {
+        $branch = 'master';
+        $revision = 'abcdefg';
+        $tag = '9.0.42-rc.2';
+
+        return [
+            'default git format' => [
+                'format' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
+                'branch' => $branch,
+                'revision' => $revision,
+                'tag' => $tag,
+                'expected' => "[{$revision}] {$branch}"
+            ],
+            'git format: revision' => [
+                'format' => GitCommandEnumeration::FORMAT_REVISION,
+                'branch' => $branch,
+                'revision' => $revision,
+                'tag' => $tag,
+                'expected' => "{$revision}"
+            ],
+            'git format: [revision] branch' => [
+                'format' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
+                'branch' => $branch,
+                'revision' => $revision,
+                'tag' => $tag,
+                'expected' => "[{$revision}] {$branch}"
+            ],
+            'git format: [revision] tag' => [
+                'format' => GitCommandEnumeration::FORMAT_REVISION_TAG,
+                'branch' => $branch,
+                'revision' => $revision,
+                'tag' => $tag,
+                'expected' => "[{$revision}] {$tag}"
+            ],
+            'git format: branch' => [
+                'format' => GitCommandEnumeration::FORMAT_BRANCH,
+                'branch' => $branch,
+                'revision' => $revision,
+                'tag' => $tag,
+                'expected' => "{$branch}"
+            ],
+            'git format: tag' => [
+                'format' => GitCommandEnumeration::FORMAT_TAG,
+                'branch' => $branch,
+                'revision' => $revision,
+                'tag' => $tag,
+                'expected' => "{$tag}"
+            ],
+        ];
     }
 
     protected function setUp()
