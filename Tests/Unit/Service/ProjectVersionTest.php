@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
-use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ProjectVersionTest

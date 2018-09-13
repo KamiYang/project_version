@@ -66,7 +66,6 @@ class ProjectVersionSlotTest extends UnitTestCase
             ->shouldHaveBeenCalledTimes(1);
     }
 
-
     /**
      * @test
      */
