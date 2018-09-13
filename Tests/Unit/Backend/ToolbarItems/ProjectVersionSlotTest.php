@@ -14,7 +14,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Class ProjectVersionSlotTest
  *
- * @package KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionSlotTest extends UnitTestCase

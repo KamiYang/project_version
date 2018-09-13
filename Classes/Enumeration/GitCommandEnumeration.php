@@ -6,7 +6,6 @@ namespace KamiYang\ProjectVersion\Enumeration;
 /**
  * Class GitCommandEnumeration
  *
- * @package KamiYang\ProjectVersion\Enumeration
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class GitCommandEnumeration
