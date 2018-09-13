@@ -5,6 +5,7 @@
         cacheTokens="false"
         colors="true"
         verbose="true"
+        bootstrap=".Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php"
 >
     <testsuites>
         <testsuite name="Project Version Unit tests">
@@ -19,4 +20,8 @@
             </exclude>
         </whitelist>
     </filter>
+
+    <logging>
+        <log type="coverage-clover" target=".Build/web/typo3temp/logs/clover.xml"/>
+    </logging>
 </phpunit>

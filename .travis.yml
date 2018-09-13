@@ -49,6 +49,9 @@ script:
     echo;
     find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
 
+after_script:
+  -  .Build/bin/php-coveralls -v
+
 jobs:
   allow_failures:
     - env: TYPO3_VERSION=dev-master
