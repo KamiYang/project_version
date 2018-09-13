@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Service;
 
-use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Class ProjectVersion

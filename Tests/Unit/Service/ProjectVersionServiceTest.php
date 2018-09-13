@@ -163,6 +163,42 @@ class ProjectVersionServiceTest extends UnitTestCase
     }
 
     /**
+     * @test
+     */
+    public function getProjectVersionShouldTryToFetchVersionFromFileIfResolvingUsingGitErrored()
+    {
+        //Arrange
+        $this->extensionConfiguration['versionFilePath'] = 'EXT:project_version/Tests/Fixture/VERSION';
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::GIT_FILE_FALLBACK;
+        $this->extensionConfiguration['gitFormat'] = GitCommandEnumeration::FORMAT_REVISION_BRANCH;
+        $this->setUpExtensionConfiguration();
+        $branch = '';
+        $revision = '';
+        $tag = '';
+        $absoluteVersionFilename = GeneralUtility::getFileAbsFileName($this->extensionConfiguration['versionFilePath']);
+        $expected = \file_get_contents($absoluteVersionFilename);
+
+        $projectVersion = new ProjectVersion();
+        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersion);
+
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_BRANCH)->willReturn($branch);
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_REVISION)->willReturn($revision);
+        $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->willReturn($tag);
+
+        /** @var \KamiYang\ProjectVersion\Service\ProjectVersionService $subject */
+        $subject = $this->createPartialMock(ProjectVersionService::class, ['isGitAvailable']);
+        $subject->method('isGitAvailable')->willReturn(true);
+        $subject->injectCommandUtilityFacade($this->commandUtilityFacadeProphecy->reveal());
+        $subject->injectSystemEnvironmentBuilderFacade($this->systemEnvironmentBuilderFacadeProphecy->reveal());
+
+        // Act
+        $subject->getProjectVersion();
+
+        // Assert
+        static::assertSame($expected, $projectVersion->getVersion());
+    }
+
+    /**
      * @return array
      */
     public function gitFormatDataProvider(): array

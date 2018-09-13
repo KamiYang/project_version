@@ -55,6 +55,35 @@ class ProjectVersionService implements SingletonInterface
     }
 
     /**
+     * @param $revision
+     * @param $tag
+     * @param $branch
+     * @return string
+     */
+    private function formatVersionBasedOnConfiguration($revision, $tag, $branch): string
+    {
+        switch (ExtensionConfiguration::getGitFormat()) {
+            case GitCommandEnumeration::FORMAT_REVISION:
+                $format = $revision;
+                break;
+            case GitCommandEnumeration::FORMAT_REVISION_TAG:
+                $format = \sprintf('[%s] %s', $revision, $tag);
+                break;
+            case GitCommandEnumeration::FORMAT_BRANCH:
+                $format = $branch;
+                break;
+            case GitCommandEnumeration::FORMAT_TAG:
+                $format = $tag;
+                break;
+            case GitCommandEnumeration::FORMAT_REVISION_BRANCH:
+            default:
+                $format = \sprintf('[%s] %s', $revision, $branch);
+        }
+
+        return $format;
+    }
+
+    /**
      * SystemEnvironmentBuilderFacade injector.
      *
      * @param \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade
@@ -130,23 +159,10 @@ class ProjectVersionService implements SingletonInterface
         $branch = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_BRANCH));
         $revision = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_REVISION));
         $tag = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_TAG));
+        $format = '';
 
-        switch (ExtensionConfiguration::getGitFormat()) {
-            case GitCommandEnumeration::FORMAT_REVISION:
-                $format = $revision;
-                break;
-            case GitCommandEnumeration::FORMAT_REVISION_TAG:
-                $format = \sprintf('[%s] %s', $revision, $tag);
-                break;
-            case GitCommandEnumeration::FORMAT_BRANCH:
-                $format = $branch;
-                break;
-            case GitCommandEnumeration::FORMAT_TAG:
-                $format = $tag;
-                break;
-            case GitCommandEnumeration::FORMAT_REVISION_BRANCH:
-            default:
-                $format = \sprintf('[%s] %s', $revision, $branch);
+        if ($branch || $revision || $tag) {
+            $format = $this->formatVersionBasedOnConfiguration($revision, $tag, $branch);
         }
 
         return $format;
