@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
@@ -12,9 +13,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
- * Class ProjectVersionSlotTest
+ * Class ProjectVersionSlotTest.
  *
- * @package KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionSlotTest extends UnitTestCase

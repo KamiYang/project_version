@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Service;
@@ -6,9 +7,8 @@ namespace KamiYang\ProjectVersion\Service;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
- * Class ProjectVersion
+ * Class ProjectVersion.
  *
- * @package KamiYang\ProjectVersion\Service
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersion implements SingletonInterface
@@ -16,12 +16,12 @@ class ProjectVersion implements SingletonInterface
     const UNKNOWN_VERSION = 'Unknown project version';
 
     /**
-     * @var string $title
+     * @var string
      */
     protected $title = 'Project Version';
 
     /**
-     * @var string $version
+     * @var string
      */
     protected $version = self::UNKNOWN_VERSION;
 

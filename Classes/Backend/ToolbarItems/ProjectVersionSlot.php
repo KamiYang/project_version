@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Backend\ToolbarItems;
@@ -10,9 +11,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
- * Class ProjectVersionSlot
+ * Class ProjectVersionSlot.
  *
- * @package KamiYang\ProjectVersion\Backend\ToolbarItems
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class ProjectVersionSlot implements SingletonInterface

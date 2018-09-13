@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
@@ -7,9 +8,8 @@ use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
- * Class ProjectVersionTest
+ * Class ProjectVersionTest.
  *
- * @package KamiYang\ProjectVersion\Tests\Unit\Service
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionTest extends UnitTestCase

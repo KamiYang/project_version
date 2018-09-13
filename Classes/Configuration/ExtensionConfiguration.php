@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Configuration;
@@ -8,9 +9,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
- * Class ExtensionConfiguration
+ * Class ExtensionConfiguration.
  *
- * @package KamiYang\ProjectVersion\Configuration
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class ExtensionConfiguration implements SingletonInterface
@@ -33,6 +33,7 @@ final class ExtensionConfiguration implements SingletonInterface
      * Indicator for the fetching method.
      *
      * @var string
+     *
      * @see \KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration
      */
     private static $mode = 0;
@@ -115,6 +116,7 @@ final class ExtensionConfiguration implements SingletonInterface
 
     /**
      * @param string $pathFromConfiguration
+     *
      * @return bool
      */
     private function isDirectory(string $pathFromConfiguration): bool
