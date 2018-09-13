@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Service;
@@ -12,9 +13,8 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class ProjectVersionService
+ * Class ProjectVersionService.
  *
- * @package KamiYang\ProjectVersion\Service
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersionService implements SingletonInterface
@@ -66,7 +66,6 @@ class ProjectVersionService implements SingletonInterface
                 $this->setVersionFromFile($projectVersion);
         }
 
-
         return $projectVersion;
     }
 
@@ -111,7 +110,7 @@ class ProjectVersionService implements SingletonInterface
              * The icon identifier for "git" changed between TYPO3 v8 and v9.
              * For TYPO3 v8 it's "sysinfo-git" and for v9 it's "information-git"
              */
-            $gitIconIdentifier = (float)TYPO3_version < 9 ? 'sysinfo-git' : 'information-git';
+            $gitIconIdentifier = (float) TYPO3_version < 9 ? 'sysinfo-git' : 'information-git';
 
             $projectVersion->setVersion($version);
             $projectVersion->setIconIdentifier($gitIconIdentifier);

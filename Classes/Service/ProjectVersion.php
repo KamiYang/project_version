@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Service;
@@ -9,9 +10,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
- * Class ProjectVersion
+ * Class ProjectVersion.
  *
- * @package KamiYang\ProjectVersion\Service
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersion implements SingletonInterface
@@ -19,12 +19,12 @@ class ProjectVersion implements SingletonInterface
     const UNKNOWN_VERSION = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
 
     /**
-     * @var string $title
+     * @var string
      */
     protected $title = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version';
 
     /**
-     * @var string $version
+     * @var string
      */
     protected $version = self::UNKNOWN_VERSION;
 

@@ -1,12 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Enumeration;
 
 /**
- * Class ProjectVersionModeEnumeration
+ * Class ProjectVersionModeEnumeration.
  *
- * @package KamiYang\ProjectVersion\Enumeration
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class ProjectVersionModeEnumeration

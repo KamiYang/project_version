@@ -1,12 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Enumeration;
 
 /**
- * Class GitCommandEnumeration
+ * Class GitCommandEnumeration.
  *
- * @package KamiYang\ProjectVersion\Enumeration
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class GitCommandEnumeration

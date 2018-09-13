@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
@@ -10,9 +11,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
- * Class ProjectVersionTest
+ * Class ProjectVersionTest.
  *
- * @package KamiYang\ProjectVersion\Tests\Unit\Service
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionTest extends UnitTestCase

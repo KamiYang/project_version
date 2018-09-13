@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') or die();
 
 call_user_func(function (string $extKey) {
@@ -14,7 +15,7 @@ call_user_func(function (string $extKey) {
                 'information-project-version',
                 \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
                 [
-                    'source' => 'EXT:project_version/Resources/Public/Icons/ToolbarItem.svg'
+                    'source' => 'EXT:project_version/Resources/Public/Icons/ToolbarItem.svg',
                 ]
             );
 
