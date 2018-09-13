@@ -40,7 +40,7 @@ script:
       echo "Running unit tests";
       echo;
       echo;
-      .Build/bin/phpunit --bootstrap .Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php Tests/Unit/;
+      .Build/bin/phpunit Tests/Unit/;
     fi
   - >
     echo;
