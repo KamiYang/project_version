@@ -90,12 +90,17 @@ The new configuration screen will look like this:
  - [x] Upload extension to TER
  - [x] Support TYPO3 v9.4
  - [ ] Support TYPO3 v9 LTS
+ - [x] Achieve overall test coverage above 95%  
+ - [x] Configure [TravisCI](https://travis-ci.org/KamiYang/project_version)
+ - [x] Configure [StyleCI](https://github.styleci.io/repos/134700322)
+ - [x] Configure [Coveralls](https://coveralls.io/github/KamiYang/project_version)
+ - [ ] Automate release to TER using [Travis-CI](https://travis-ci.org/) and [helhum/ter-client](https://github.com/helhum/ter-client)
 
 ### Milestone for v0.6.0
-The next milestone is the documentation of various use cases and possibilities and achieve a higher coverage. Current coverage is about ~70%. 
+ - Automated release management and upload to TER.
+ - Ability to "hardcode" static project version via the TYPO3 backend
 
 ## Note
-
 The TYPO3 v8 version of this extension will not be maintained after release 1.0.0! But this should be no problem because TYPO3 v8 only gets bugfixes.
 This means, version 1.0.0 should stay compatible with all further TYPO3 v8 releases!
 
