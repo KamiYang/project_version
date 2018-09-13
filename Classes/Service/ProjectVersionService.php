@@ -28,19 +28,6 @@ class ProjectVersionService implements SingletonInterface
     protected $commandUtilityFacade;
 
     /**
-     * ProjectVersionService constructor.
-     *
-     * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtilityFacade
-     */
-    public function __construct(
-        SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade,
-        CommandUtilityFacade $commandUtilityFacade
-    ) {
-        $this->systemEnvironmentBuilderFacade = $systemEnvironmentBuilderFacade;
-        $this->commandUtilityFacade = $commandUtilityFacade;
-    }
-
-    /**
      * @api
      */
     public function getProjectVersion(): ProjectVersion
@@ -65,6 +52,26 @@ class ProjectVersionService implements SingletonInterface
         }
 
         return $projectVersion;
+    }
+
+    /**
+     * SystemEnvironmentBuilderFacade injector.
+     *
+     * @param \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade
+     */
+    public function injectSystemEnvironmentBuilderFacade(SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade)
+    {
+        $this->systemEnvironmentBuilderFacade = $systemEnvironmentBuilderFacade;
+    }
+
+    /**
+     * CommandUtilityFacade injector.
+     *
+     * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtilityFacade
+     */
+    public function injectCommandUtilityFacade(CommandUtilityFacade $commandUtilityFacade)
+    {
+        $this->commandUtilityFacade = $commandUtilityFacade;
     }
 
     /**

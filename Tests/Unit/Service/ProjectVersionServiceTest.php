@@ -40,27 +40,6 @@ class ProjectVersionServiceTest extends UnitTestCase
      */
     private $commandUtilityFacadeProphecy;
 
-    protected function setUp()
-    {
-        $this->systemEnvironmentBuilderFacadeProphecy = $this->prophesize(SystemEnvironmentBuilderFacade::class);
-        $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
-            ->willReturn(false);
-
-        $this->commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
-
-        $this->subject = new ProjectVersionService(
-            $this->systemEnvironmentBuilderFacadeProphecy->reveal(),
-            $this->commandUtilityFacadeProphecy->reveal()
-        );
-    }
-
-    protected function tearDown()
-    {
-        GeneralUtility::purgeInstances();
-
-        parent::tearDown();
-    }
-
     /**
      * @test
      */
@@ -133,6 +112,26 @@ class ProjectVersionServiceTest extends UnitTestCase
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
+    }
+
+    protected function setUp()
+    {
+        $this->systemEnvironmentBuilderFacadeProphecy = $this->prophesize(SystemEnvironmentBuilderFacade::class);
+        $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
+            ->willReturn(false);
+
+        $this->commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
+
+        $this->subject = new ProjectVersionService();
+        $this->subject->injectCommandUtilityFacade($this->commandUtilityFacadeProphecy->reveal());
+        $this->subject->injectSystemEnvironmentBuilderFacade($this->systemEnvironmentBuilderFacadeProphecy->reveal());
+    }
+
+    protected function tearDown()
+    {
+        GeneralUtility::purgeInstances();
+
+        parent::tearDown();
     }
 
     protected function setUpExtensionConfiguration()
