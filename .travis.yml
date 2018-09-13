@@ -1,0 +1,74 @@
+# .travis.yml
+language: php
+
+sudo: false
+
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+
+env:
+  - TYPO3_VERSION=^8
+  - TYPO3_VERSION=^9
+
+matrix:
+  exclude:
+    - php: 7.0
+      env: TYPO3_VERSION=^9
+    - php: 7.1
+      env: TYPO3_VERSION=^9
+
+addons:
+  apt:
+    packages:
+      - parallel
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+install:
+  - composer require typo3/minimal:${TYPO3_VERSION}
+  - git checkout composer.json
+  - export TYPO3_PATH_WEB="$PWD/.Build/web"
+
+script:
+  - >
+    if [ -d "Tests/Unit" ]; then
+      echo;
+      echo "Running unit tests";
+      echo;
+      echo;
+      .Build/bin/phpunit --bootstrap .Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php Tests/Unit/;
+    fi
+  - >
+    echo;
+    echo "Running php lint";
+    echo;
+    echo;
+    find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
+
+jobs:
+  fast_finish: true
+  allow_failures:
+    - env: TYPO3=dev-master
+    - env: TYPO3=8.7.x-dev
+  include:
+    - stage: test
+      php: 7.2
+      env: TYPO3=8.7.x-dev
+    - stage: test
+      php: 7.1
+      env: TYPO3=^8.0
+    - stage: test
+      php: 7.1
+      env: TYPO3=8.7.x-dev
+    - stage: test
+      php: 7.0
+      env: TYPO3=^8.0
+    - stage: test
+      php: 7.0
+      env: TYPO3=8.7.x-dev
+    - stage: test
+        php: 7.2
+        env: TYPO3=~9.4.0
