@@ -7,12 +7,10 @@ use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Class ProjectVersionTest
  *
- * @package KamiYang\ProjectVersion\Tests\Unit\Service
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionTest extends UnitTestCase

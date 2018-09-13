@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 /**
  * Class CommandUtilityFacade
  *
- * @package KamiYang\ProjectVersion\Facade
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class CommandUtilityFacade

@@ -6,7 +6,6 @@ namespace KamiYang\ProjectVersion\Enumeration;
 /**
  * Class ProjectVersionModeEnumeration
  *
- * @package KamiYang\ProjectVersion\Enumeration
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class ProjectVersionModeEnumeration

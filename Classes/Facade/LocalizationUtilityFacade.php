@@ -12,7 +12,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  *
  * @see \TYPO3\CMS\Extbase\Utility\LocalizationUtility
  * @internal
- * @package KamiYang\ProjectVersion\Facade
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class LocalizationUtilityFacade

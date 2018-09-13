@@ -11,7 +11,6 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 /**
  * Class ProjectVersion
  *
- * @package KamiYang\ProjectVersion\Service
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersion implements SingletonInterface

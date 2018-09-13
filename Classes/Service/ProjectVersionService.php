@@ -14,7 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Class ProjectVersionService
  *
- * @package KamiYang\ProjectVersion\Service
  * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersionService implements SingletonInterface
@@ -27,7 +26,6 @@ class ProjectVersionService implements SingletonInterface
      * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
      */
     protected $commandUtilityFacade;
-
 
     /**
      * ProjectVersionService constructor.
@@ -65,7 +63,6 @@ class ProjectVersionService implements SingletonInterface
             default:
                 $this->setVersionFromFile($projectVersion);
         }
-
 
         return $projectVersion;
     }

@@ -4,21 +4,17 @@ declare(strict_types=1);
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
-use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
 use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
-use Prophecy\Promise\CallbackPromise;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ProjectVersionServiceTest
  *
- * @package KamiYang\ProjectVersion\Tests\Unit\Service
  * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionServiceTest extends UnitTestCase
@@ -46,7 +42,6 @@ class ProjectVersionServiceTest extends UnitTestCase
 
         $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
             ->willReturn(false);
-
 
         $this->subject = new ProjectVersionService(
             $this->systemEnvironmentBuilderFacadeProphecy->reveal()
