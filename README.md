@@ -1,4 +1,7 @@
-# Project Version (EXT:project_version)  
+# Project Version (EXT:project_version)
+
+[![StyleCI](https://github.styleci.io/repos/134700322/shield?branch=master)](https://github.styleci.io/repos/134700322)
+[![Build Status](https://travis-ci.org/KamiYang/project_version.svg?branch=master)](https://travis-ci.org/KamiYang/project_version)
 
 ## What is project version?
 Project version is a TYPO3  extension that adds an entry to the TYPO3 system information in the toolbar. This entry is based either on the common 'VERSION' file or on the local GIT revision.
