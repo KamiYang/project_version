@@ -25,8 +25,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProjectVersionSlot
- *
- * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 final class ProjectVersionSlot implements SingletonInterface
 {

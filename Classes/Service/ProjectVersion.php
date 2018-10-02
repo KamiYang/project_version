@@ -19,8 +19,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Class ProjectVersion
- *
- * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersion implements SingletonInterface
 {

@@ -19,8 +19,6 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 
 /**
  * Class CommandUtilityFacade
- *
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class CommandUtilityFacade
 {

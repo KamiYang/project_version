@@ -20,8 +20,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * Class ProjectVersionTest
- *
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionTest extends UnitTestCase
 {

@@ -28,8 +28,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ProjectVersionServiceTest
- *
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionServiceTest extends UnitTestCase
 {

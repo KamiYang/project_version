@@ -26,8 +26,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProjectVersionSlotTest
- *
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionSlotTest extends UnitTestCase
 {

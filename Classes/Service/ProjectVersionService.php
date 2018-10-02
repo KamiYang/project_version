@@ -25,8 +25,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ProjectVersionService
- *
- * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class ProjectVersionService implements SingletonInterface
 {
