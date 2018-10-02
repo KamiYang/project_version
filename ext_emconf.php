@@ -10,11 +10,11 @@ $EM_CONF[$_EXTKEY] = [
     'clearCacheOnLoad' => 1,
     'author' => 'Jan Stockfisch',
     'author_email' => 'jan@jan-stockfisch.de',
-    'version' => '0.5.0',
+    'version' => '0.6.0',
     'constraints' => [
         'depends' => [
             'php' => '7.0',
-            'typo3' => '8.7.0-9.4.0'
+            'typo3' => '8.7.0-9.5.0'
         ],
         'conflicts' => [
         ],
