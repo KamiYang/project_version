@@ -3,6 +3,18 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Backend\ToolbarItems;
 
+/*
+ * This file is part of the ProjectVersion project.
+ *
+ * It is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * For the full copyright and license information, please read
+ * LICENSE file that was distributed with this source code.
+ */
+
 use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
