@@ -45,7 +45,7 @@ class ProjectVersionService implements SingletonInterface
         $projectVersion = GeneralUtility::makeInstance(ProjectVersion::class);
 
         switch (ExtensionConfiguration::getMode()) {
-            case ProjectVersionModeEnumeration::STATIC:
+            case ProjectVersionModeEnumeration::STATIC_VERSION:
                 $this->setStaticVersion($projectVersion);
                 break;
             case ProjectVersionModeEnumeration::GIT:
@@ -128,7 +128,7 @@ class ProjectVersionService implements SingletonInterface
     }
 
     /**
-     * @param ProjectVersion $projectVersion
+     * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
      */
     private function setStaticVersion(ProjectVersion $projectVersion)
     {

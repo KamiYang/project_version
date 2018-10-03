@@ -270,7 +270,7 @@ class ProjectVersionServiceTest extends UnitTestCase
      */
     public function getProjectVersionShouldAlwaysSetStaticVersionIfSelected()
     {
-        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC;
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC_VERSION;
         $this->setUpExtensionConfiguration();
 
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
@@ -288,7 +288,7 @@ class ProjectVersionServiceTest extends UnitTestCase
      */
     public function getProjectVersionShouldSetStaticVersionFromExtensionConfigurationIfSelected(string $staticVersion)
     {
-        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC;
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC_VERSION;
         $this->extensionConfiguration['staticVersion'] = $staticVersion;
         $this->setUpExtensionConfiguration();
 
