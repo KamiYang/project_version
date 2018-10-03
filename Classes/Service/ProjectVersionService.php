@@ -135,7 +135,6 @@ class ProjectVersionService implements SingletonInterface
         $projectVersion->setVersion(ExtensionConfiguration::getStaticVersion());
     }
 
-
     /**
      * Resolve version by common VERSION-file.
      *
