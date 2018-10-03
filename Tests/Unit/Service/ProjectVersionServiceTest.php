@@ -37,8 +37,10 @@ class ProjectVersionServiceTest extends UnitTestCase
     private $subject;
 
     private $extensionConfiguration = [
-        'versionFilePath' => 'VERSION',
-        'mode' => ProjectVersionModeEnumeration::FILE
+        'gitFormat' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
+        'mode' => ProjectVersionModeEnumeration::FILE,
+        'staticVersion' => '',
+        'versionFilePath' => 'VERSION'
     ];
 
     /**
@@ -260,6 +262,56 @@ class ProjectVersionServiceTest extends UnitTestCase
                 'tag' => $tag,
                 'expected' => "{$tag}"
             ],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function getProjectVersionShouldAlwaysSetStaticVersionIfSelected()
+    {
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC;
+        $this->setUpExtensionConfiguration();
+
+        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
+        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+
+        $this->subject->getProjectVersion();
+
+        $projectVersionProphecy->setVersion('')->shouldHaveBeenCalledTimes(1);
+    }
+
+    /**
+     * @test
+     * @param string $staticVersion
+     * @dataProvider staticVersionDataProvider
+     */
+    public function getProjectVersionShouldSetStaticVersionFromExtensionConfigurationIfSelected(string $staticVersion)
+    {
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC;
+        $this->extensionConfiguration['staticVersion'] = $staticVersion;
+        $this->setUpExtensionConfiguration();
+
+        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
+        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+
+        $this->subject->getProjectVersion();
+
+        $projectVersionProphecy->setVersion($staticVersion)->shouldHaveBeenCalledTimes(1);
+    }
+
+    public function staticVersionDataProvider(): array
+    {
+        return [
+            'empty static version (default value)' => [
+                'staticVersion' => ''
+            ],
+            'some value' => [
+                'staticVersion' => 'some value'
+            ],
+            'some extreme long value' => [
+                'staticVersion' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos hic ipsa labore molestiae nesciunt quo repellendus similique tenetur vitae voluptatem! Dicta dolor minus nostrum ratione voluptas? Ad animi iste sunt!'
+            ]
         ];
     }
 

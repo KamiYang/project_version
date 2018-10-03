@@ -23,4 +23,5 @@ final class ProjectVersionModeEnumeration
     const FILE = '0';
     const GIT = '1';
     const GIT_FILE_FALLBACK = '2';
+    const STATIC = '3';
 }
