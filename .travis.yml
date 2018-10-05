@@ -75,3 +75,6 @@ jobs:
     - stage: test
       php: 7.2
       env: TYPO3_VERSION=~9.4.0
+    - stage: test
+      php: 7.2
+      env: TYPO3_VERSION=~9.5.0
