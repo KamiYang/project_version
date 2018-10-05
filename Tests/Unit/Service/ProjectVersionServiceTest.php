@@ -3,6 +3,18 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
+/*
+ * This file is part of the ProjectVersion project.
+ *
+ * It is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * For the full copyright and license information, please read
+ * LICENSE file that was distributed with this source code.
+ */
+
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
@@ -16,8 +28,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ProjectVersionServiceTest
- *
- * @author Jan Stockfisch <j.stockfisch@neusta.de>
  */
 class ProjectVersionServiceTest extends UnitTestCase
 {
@@ -27,8 +37,10 @@ class ProjectVersionServiceTest extends UnitTestCase
     private $subject;
 
     private $extensionConfiguration = [
-        'versionFilePath' => 'VERSION',
-        'mode' => ProjectVersionModeEnumeration::FILE
+        'gitFormat' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
+        'mode' => ProjectVersionModeEnumeration::FILE,
+        'staticVersion' => '',
+        'versionFilePath' => 'VERSION'
     ];
 
     /**
@@ -250,6 +262,56 @@ class ProjectVersionServiceTest extends UnitTestCase
                 'tag' => $tag,
                 'expected' => "{$tag}"
             ],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function getProjectVersionShouldAlwaysSetStaticVersionIfSelected()
+    {
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC_VERSION;
+        $this->setUpExtensionConfiguration();
+
+        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
+        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+
+        $this->subject->getProjectVersion();
+
+        $projectVersionProphecy->setVersion('')->shouldHaveBeenCalledTimes(1);
+    }
+
+    /**
+     * @test
+     * @param string $staticVersion
+     * @dataProvider staticVersionDataProvider
+     */
+    public function getProjectVersionShouldSetStaticVersionFromExtensionConfigurationIfSelected(string $staticVersion)
+    {
+        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC_VERSION;
+        $this->extensionConfiguration['staticVersion'] = $staticVersion;
+        $this->setUpExtensionConfiguration();
+
+        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
+        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+
+        $this->subject->getProjectVersion();
+
+        $projectVersionProphecy->setVersion($staticVersion)->shouldHaveBeenCalledTimes(1);
+    }
+
+    public function staticVersionDataProvider(): array
+    {
+        return [
+            'empty static version (default value)' => [
+                'staticVersion' => ''
+            ],
+            'some value' => [
+                'staticVersion' => 'some value'
+            ],
+            'some extreme long value' => [
+                'staticVersion' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos hic ipsa labore molestiae nesciunt quo repellendus similique tenetur vitae voluptatem! Dicta dolor minus nostrum ratione voluptas? Ad animi iste sunt!'
+            ]
         ];
     }
 

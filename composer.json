@@ -22,8 +22,9 @@
     "project_version": "self.version"
   },
   "require": {
-    "typo3/cms-backend": ">=8.7.0 <9 || >=9.4.0 <9.5",
-    "typo3/cms-extensionmanager": ">=8.7.0 <9 || >=9.4.0 <9.5",
+    "typo3/cms-backend": ">=8.7 <9.6",
+    "typo3/cms-extbase": ">=8.7 <9.6",
+    "typo3/cms-extensionmanager": ">=8.7 <9.6",
     "php": ">=7.0"
   },
   "require-dev": {

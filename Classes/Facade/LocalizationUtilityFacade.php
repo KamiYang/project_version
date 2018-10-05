@@ -3,6 +3,18 @@ declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Facade;
 
+/*
+ * This file is part of the ProjectVersion project.
+ *
+ * It is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * For the full copyright and license information, please read
+ * LICENSE file that was distributed with this source code.
+ */
+
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -12,7 +24,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  *
  * @see \TYPO3\CMS\Extbase\Utility\LocalizationUtility
  * @internal
- * @author Jan Stockfisch <jan@jan-stockfisch.de>
  */
 class LocalizationUtilityFacade
 {
