@@ -45,6 +45,9 @@ class ProjectVersionService implements SingletonInterface
         $projectVersion = GeneralUtility::makeInstance(ProjectVersion::class);
 
         switch (ExtensionConfiguration::getMode()) {
+            case ProjectVersionModeEnumeration::STATIC_VERSION:
+                $this->setStaticVersion($projectVersion);
+                break;
             case ProjectVersionModeEnumeration::GIT:
                 $this->setVersionFromGit($projectVersion);
                 break;
@@ -122,6 +125,14 @@ class ProjectVersionService implements SingletonInterface
             // check if git exists
             $this->commandUtilityFacade->exec('git --version', $_, $returnCode) &&
             $returnCode === 0;
+    }
+
+    /**
+     * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
+     */
+    private function setStaticVersion(ProjectVersion $projectVersion)
+    {
+        $projectVersion->setVersion(ExtensionConfiguration::getStaticVersion());
     }
 
     /**

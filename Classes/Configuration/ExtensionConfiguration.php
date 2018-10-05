@@ -53,6 +53,11 @@ final class ExtensionConfiguration implements SingletonInterface
     private static $gitFormat = '';
 
     /**
+     * @var string
+     */
+    private static $staticVersion = '';
+
+    /**
      * Fetch absolute version filename.
      *
      * @return string
@@ -86,6 +91,14 @@ final class ExtensionConfiguration implements SingletonInterface
         return self::$gitFormat;
     }
 
+    /**
+     * @return string
+     */
+    public static function getStaticVersion(): string
+    {
+        return self::$staticVersion;
+    }
+
     public function __construct()
     {
         self::$configuration = $this->getExtensionConfigurationFromGlobals();
@@ -93,6 +106,7 @@ final class ExtensionConfiguration implements SingletonInterface
         self::$versionFilePath = $this->resolveVersionFilePath();
         self::$mode = self::$configuration['mode'];
         self::$gitFormat = self::$configuration['gitFormat'];
+        self::$staticVersion = self::$configuration['staticVersion'];
     }
 
     /**
