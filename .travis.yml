@@ -3,11 +3,6 @@ language: php
 
 sudo: false
 
-os:
-  - linux
-  - osx
-  - windows
-
 php:
   - 7.0
   - 7.1
