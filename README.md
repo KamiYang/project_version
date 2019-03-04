@@ -3,6 +3,7 @@
 [![StyleCI](https://github.styleci.io/repos/134700322/shield?branch=master)](https://github.styleci.io/repos/134700322)
 [![Build Status](https://travis-ci.org/KamiYang/project_version.svg?branch=master)](https://travis-ci.org/KamiYang/project_version)
 [![Coverage Status](https://coveralls.io/repos/github/KamiYang/project_version/badge.svg?branch=master)](https://coveralls.io/github/KamiYang/project_version?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/KamiYang/project_version/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/KamiYang/project_version/?branch=master)
 
 ## What is project version?
 Project version is a TYPO3  extension that adds an entry to the TYPO3 system information in the toolbar. This entry is based either on the common 'VERSION' file or on the local GIT revision.
@@ -85,7 +86,7 @@ The new configuration screen will look like this:
  - [x] Add ability to configure "VERSION"-file path
  - [x] GIT revision support
  - [x] GIT tag/branch based on revision support
- - [ ] Add documentation of this extensions features
+ - [x] Add documentation of this extensions features
  - [x] Upload extension to packagist.org
  - [x] Upload extension to TER
  - [x] Support TYPO3 v9.4
