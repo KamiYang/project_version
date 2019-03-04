@@ -85,7 +85,7 @@ The new configuration screen will look like this:
  - [x] Add ability to configure "VERSION"-file path
  - [x] GIT revision support
  - [x] GIT tag/branch based on revision support
- - [ ] Add documentation of this extensions features
+ - [x] Add documentation of this extensions features
  - [x] Upload extension to packagist.org
  - [x] Upload extension to TER
  - [x] Support TYPO3 v9.4
