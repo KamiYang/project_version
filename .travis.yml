@@ -3,6 +3,11 @@ language: php
 
 sudo: false
 
+os:
+  - linux
+  - osx
+  - windows
+
 php:
   - 7.0
   - 7.1
@@ -55,23 +60,16 @@ after_script:
 jobs:
   allow_failures:
     - env: TYPO3_VERSION=dev-master
-    - env: TYPO3_VERSION=8.7.x-dev
   include:
     - stage: test
+      php: 7.0
+      env: TYPO3_VERSION=^8.0
+    - stage: test
+      php: 7.1
+      env: TYPO3_VERSION=^8.0
+    - stage: test
       php: 7.2
-      env: TYPO3_VERSION=8.7.x-dev
-    - stage: test
-      php: 7.1
       env: TYPO3_VERSION=^8.0
-    - stage: test
-      php: 7.1
-      env: TYPO3_VERSION=8.7.x-dev
-    - stage: test
-      php: 7.0
-      env: TYPO3_VERSION=^8.0
-    - stage: test
-      php: 7.0
-      env: TYPO3_VERSION=8.7.x-dev
     - stage: test
       php: 7.2
       env: TYPO3_VERSION=~9.4.0
