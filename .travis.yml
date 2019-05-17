@@ -4,21 +4,10 @@ language: php
 sudo: false
 
 php:
-  - 7.0
-  - 7.1
   - 7.2
-
-env:
-  - TYPO3_VERSION=^8
-  - TYPO3_VERSION=^9
 
 matrix:
   fast_finish: true
-  exclude:
-    - php: 7.0
-      env: TYPO3_VERSION=^9
-    - php: 7.1
-      env: TYPO3_VERSION=^9
 
 addons:
   apt:
@@ -29,7 +18,8 @@ cache:
     - $HOME/.composer/cache
 
 install:
-  - composer require nimut/typo3-complete:${TYPO3_VERSION}
+  - composer require typo3/cms-backend:${TYPO3_VERSION} typo3/cms-core:${TYPO3_VERSION} typo3/cms-extbase:${TYPO3_VERSION} typo3/cms-extensionmanager:${TYPO3_VERSION} typo3/cms-filelist:${TYPO3_VERSION} typo3/cms-fluid:${TYPO3_VERSION} typo3/cms-frontend:${TYPO3_VERSION} typo3/cms-install:${TYPO3_VERSION} typo3/cms-recordlist:${TYPO3_VERSION} typo3/cms-lowlevel:${TYPO3_VERSION} typo3/cms-about:${TYPO3_VERSION} typo3/cms-belog:${TYPO3_VERSION} typo3/cms-beuser:${TYPO3_VERSION} typo3/cms-felogin:${TYPO3_VERSION} typo3/cms-fluid-styled-content:${TYPO3_VERSION} typo3/cms-form:${TYPO3_VERSION} typo3/cms-impexp:${TYPO3_VERSION} typo3/cms-info:${TYPO3_VERSION} typo3/cms-rte-ckeditor:${TYPO3_VERSION} typo3/cms-setup:${TYPO3_VERSION} typo3/cms-seo:${TYPO3_VERSION} typo3/cms-sys-note:${TYPO3_VERSION} typo3/cms-t3editor:${TYPO3_VERSION} typo3/cms-tstemplate:${TYPO3_VERSION} typo3/cms-viewpage:${TYPO3_VERSION} typo3/cms-adminpanel:${TYPO3_VERSION} typo3/cms-redirects:${TYPO3_VERSION} typo3/cms-workspaces:${TYPO3_VERSION} typo3/cms-reports:${TYPO3_VERSION} typo3/cms-scheduler:${TYPO3_VERSION} typo3/cms-recycler:${TYPO3_VERSION} typo3/cms-opendocs:${TYPO3_VERSION} typo3/cms-linkvalidator:${TYPO3_VERSION}
+
   - git checkout composer.json
   - export TYPO3_PATH_WEB="$PWD/.Build/web"
 
@@ -50,24 +40,36 @@ script:
     find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
 
 after_script:
-  -  .Build/bin/php-coveralls -v
+  - .Build/bin/php-coveralls -v
 
 jobs:
   allow_failures:
     - env: TYPO3_VERSION=dev-master
   include:
     - stage: test
-      php: 7.0
-      env: TYPO3_VERSION=^8.0
-    - stage: test
-      php: 7.1
-      env: TYPO3_VERSION=^8.0
+      php: 7.2
+      env: TYPO3_VERSION=9.5.0
     - stage: test
       php: 7.2
-      env: TYPO3_VERSION=^8.0
+      env: TYPO3_VERSION=9.5.1
     - stage: test
       php: 7.2
-      env: TYPO3_VERSION=~9.4.0
+      env: TYPO3_VERSION=9.5.2
     - stage: test
       php: 7.2
-      env: TYPO3_VERSION=~9.5.0
+      env: TYPO3_VERSION=9.5.3
+    - stage: test
+      php: 7.2
+      env: TYPO3_VERSION=9.5.4
+    - stage: test
+      php: 7.2
+      env: TYPO3_VERSION=9.5.5
+    - stage: test
+      php: 7.2
+      env: TYPO3_VERSION=9.5.6
+    - stage: test
+      php: 7.2
+      env: TYPO3_VERSION=9.5.7
+    - stage: test
+      php: 7.2
+      env: TYPO3_VERSION=dev-master
