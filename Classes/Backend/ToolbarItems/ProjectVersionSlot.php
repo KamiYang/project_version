@@ -15,9 +15,9 @@ namespace KamiYang\ProjectVersion\Backend\ToolbarItems;
  * LICENSE file that was distributed with this source code.
  */
 
-use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -40,7 +40,7 @@ final class ProjectVersionSlot implements SingletonInterface
         $version = $projectVersion->getVersion();
 
         if (StringUtility::beginsWith($version, 'LLL:')) {
-            $version = GeneralUtility::makeInstance(LocalizationUtilityFacade::class)->translate($version);
+            $version = GeneralUtility::makeInstance(LanguageService::class)->sL($version);
         }
 
         $pObj->addSystemInformation(

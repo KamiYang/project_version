@@ -16,11 +16,11 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
  */
 
 use KamiYang\ProjectVersion\Backend\ToolbarItems\ProjectVersionSlot;
-use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -34,12 +34,12 @@ class ProjectVersionSlotTest extends UnitTestCase
      */
     private $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = new ProjectVersionSlot();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         GeneralUtility::purgeInstances();
 
@@ -49,7 +49,7 @@ class ProjectVersionSlotTest extends UnitTestCase
     /**
      * @test
      */
-    public function getProjectVersionShouldAddProjectVersionAsSystemInformation()
+    public function getProjectVersionShouldAddProjectVersionAsSystemInformation(): void
     {
         $version = '9000-rc.69';
         $title = 'Project Version';
@@ -79,7 +79,7 @@ class ProjectVersionSlotTest extends UnitTestCase
     /**
      * @test
      */
-    public function getProjectVersionShouldResolveCurrentVersionAndLocalizeItIfNecessary()
+    public function getProjectVersionShouldResolveCurrentVersionAndLocalizeItIfNecessary(): void
     {
         $initialVersionValue = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
         $projectVersion = new ProjectVersion();
@@ -92,12 +92,12 @@ class ProjectVersionSlotTest extends UnitTestCase
         $objectManagerProphecy = $this->prophesize(ObjectManager::class);
         $objectManagerProphecy->get(ProjectVersionService::class)->willReturn($projectVersionServiceProphecy->reveal());
 
-        $localizationUtilityFacadeProphecy = $this->prophesize(LocalizationUtilityFacade::class);
-        $localizationUtilityFacadeProphecy->translate($initialVersionValue)->willReturn($expectedVersion);
+        $localizationServiceProphecy = $this->prophesize(LanguageService::class);
+        $localizationServiceProphecy->sL($initialVersionValue)->willReturn($expectedVersion);
 
         GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManagerProphecy->reveal());
         GeneralUtility::setSingletonInstance(ProjectVersionService::class, $projectVersionServiceProphecy->reveal());
-        GeneralUtility::addInstance(LocalizationUtilityFacade::class, $localizationUtilityFacadeProphecy->reveal());
+        GeneralUtility::addInstance(LanguageService::class, $localizationServiceProphecy->reveal());
 
         $systemInformationToolbarItemProphecy = $this->prophesize(SystemInformationToolbarItem::class);
         $actual = $this->subject->getProjectVersion($systemInformationToolbarItemProphecy->reveal());
