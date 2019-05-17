@@ -10,31 +10,6 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# CSS-Files
-[*.css]
-indent_style = tab
-indent_size = 4
-
-# HTML-Files
-[*.html]
-indent_style = tab
-indent_size = 2
-
-# TMPL-Files
-[*.tmpl]
-indent_style = tab
-indent_size = 4
-
-# SCSS-Files
-[*.scss]
-indent_style = space
-indent_size = 4
-
-# JS-Files
-[*.js]
-indent_style = tab
-indent_size = 4
-
 # JSON-Files
 [*.json]
 indent_style = tab
@@ -65,22 +40,7 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 
-# package.json
-[package.json]
-indent_style = space
-indent_size = 2
-
-# TypoScript
-[*.{typoscript,tsconfig}]
-indent_style = space
-indent_size = 2
-
 # XLF-Files
 [*.xlf]
 indent_style = tab
 indent_size = 4
-
-# SQL-Files
-[*.sql]
-indent_style = tab
-indent_size = 2
