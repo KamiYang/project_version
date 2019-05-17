@@ -18,32 +18,7 @@ cache:
     - $HOME/.composer/cache
 
 install:
-  - >
-  composer require typo3/minimal:${TYPO3_VERSION} \
-  typo3/cms-lowlevel:${TYPO3_VERSION} \
-  typo3/cms-about:${TYPO3_VERSION} \
-  typo3/cms-belog:${TYPO3_VERSION} \
-  typo3/cms-beuser:${TYPO3_VERSION} \
-  typo3/cms-felogin:${TYPO3_VERSION} \
-  typo3/cms-fluid-styled-content:${TYPO3_VERSION} \
-  typo3/cms-form:${TYPO3_VERSION} \
-  typo3/cms-impexp:${TYPO3_VERSION} \
-  typo3/cms-info:${TYPO3_VERSION} \
-  typo3/cms-rte-ckeditor:${TYPO3_VERSION} \
-  typo3/cms-setup:${TYPO3_VERSION} \
-  typo3/cms-seo:${TYPO3_VERSION} \
-  typo3/cms-sys-note:${TYPO3_VERSION} \
-  typo3/cms-t3editor:${TYPO3_VERSION} \
-  typo3/cms-tstemplate:${TYPO3_VERSION} \
-  typo3/cms-viewpage:${TYPO3_VERSION} \
-  typo3/cms-adminpanel:${TYPO3_VERSION} \
-  typo3/cms-redirects:${TYPO3_VERSION} \
-  typo3/cms-workspaces:${TYPO3_VERSION} \
-  typo3/cms-reports:${TYPO3_VERSION} \
-  typo3/cms-scheduler:${TYPO3_VERSION} \
-  typo3/cms-recycler:${TYPO3_VERSION} \
-  typo3/cms-opendocs:${TYPO3_VERSION} \
-  typo3/cms-linkvalidator:${TYPO3_VERSION}
+  - composer require typo3/minimal:${TYPO3_VERSION} typo3/cms-lowlevel:${TYPO3_VERSION} typo3/cms-about:${TYPO3_VERSION} typo3/cms-belog:${TYPO3_VERSION} typo3/cms-beuser:${TYPO3_VERSION} typo3/cms-felogin:${TYPO3_VERSION} typo3/cms-fluid-styled-content:${TYPO3_VERSION} typo3/cms-form:${TYPO3_VERSION} typo3/cms-impexp:${TYPO3_VERSION} typo3/cms-info:${TYPO3_VERSION} typo3/cms-rte-ckeditor:${TYPO3_VERSION} typo3/cms-setup:${TYPO3_VERSION} typo3/cms-seo:${TYPO3_VERSION} typo3/cms-sys-note:${TYPO3_VERSION} typo3/cms-t3editor:${TYPO3_VERSION} typo3/cms-tstemplate:${TYPO3_VERSION} typo3/cms-viewpage:${TYPO3_VERSION} typo3/cms-adminpanel:${TYPO3_VERSION} typo3/cms-redirects:${TYPO3_VERSION} typo3/cms-workspaces:${TYPO3_VERSION} typo3/cms-reports:${TYPO3_VERSION} typo3/cms-scheduler:${TYPO3_VERSION} typo3/cms-recycler:${TYPO3_VERSION} typo3/cms-opendocs:${TYPO3_VERSION} typo3/cms-linkvalidator:${TYPO3_VERSION}
 
   - git checkout composer.json
   - export TYPO3_PATH_WEB="$PWD/.Build/web"
