@@ -15,13 +15,14 @@ namespace KamiYang\ProjectVersion\Backend\ToolbarItems;
  * LICENSE file that was distributed with this source code.
  */
 
+use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
+use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProjectVersionSlot
@@ -31,11 +32,9 @@ final class ProjectVersionSlot implements SingletonInterface
     /**
      * @param \TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem $pObj
      */
-    public function getProjectVersion(SystemInformationToolbarItem $pObj)
+    public function getProjectVersion(SystemInformationToolbarItem $pObj): void
     {
-        $projectVersion = GeneralUtility::makeInstance(ObjectManager::class)
-            ->get(ProjectVersionService::class)
-            ->getProjectVersion();
+        $projectVersion = $this->getProjectVersionService()->getProjectVersion();
 
         $version = $projectVersion->getVersion();
 
@@ -47,6 +46,21 @@ final class ProjectVersionSlot implements SingletonInterface
             $projectVersion->getTitle(),
             $version,
             $projectVersion->getIconIdentifier()
+        );
+    }
+
+    /**
+     * @return \KamiYang\ProjectVersion\Service\ProjectVersionService
+     */
+    protected function getProjectVersionService(): ProjectVersionService
+    {
+        $commandUtility = GeneralUtility::makeInstance(CommandUtilityFacade::class);
+        $systemEnvironmentBuilder = GeneralUtility::makeInstance(SystemEnvironmentBuilderFacade::class);
+
+        return GeneralUtility::makeInstance(
+            ProjectVersionService::class,
+            $commandUtility,
+            $systemEnvironmentBuilder
         );
     }
 }

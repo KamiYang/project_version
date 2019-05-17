@@ -22,7 +22,7 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class ProjectVersion implements SingletonInterface
 {
-    const UNKNOWN_VERSION = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
+    public const UNKNOWN_VERSION = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
 
     /**
      * @var string $title
@@ -50,7 +50,7 @@ class ProjectVersion implements SingletonInterface
     /**
      * @param string $title
      */
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -66,7 +66,7 @@ class ProjectVersion implements SingletonInterface
     /**
      * @param string $version
      */
-    public function setVersion(string $version)
+    public function setVersion(string $version): void
     {
         $this->version = $version;
     }
@@ -82,7 +82,7 @@ class ProjectVersion implements SingletonInterface
     /**
      * @param string $iconIdentifier
      */
-    public function setIconIdentifier(string $iconIdentifier)
+    public function setIconIdentifier(string $iconIdentifier): void
     {
         $this->iconIdentifier = $iconIdentifier;
     }

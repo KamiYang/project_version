@@ -18,11 +18,10 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
 use KamiYang\ProjectVersion\Backend\ToolbarItems\ProjectVersionSlot;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class ProjectVersionSlotTest
@@ -32,7 +31,7 @@ class ProjectVersionSlotTest extends UnitTestCase
     /**
      * @var \KamiYang\ProjectVersion\Backend\ToolbarItems\ProjectVersionSlot
      */
-    private $subject;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -64,10 +63,6 @@ class ProjectVersionSlotTest extends UnitTestCase
         $projectVersionServiceProphecy = $this->prophesize(ProjectVersionService::class);
         $projectVersionServiceProphecy->getProjectVersion()->willReturn($projectVersion);
 
-        $objectManagerProphecy = $this->prophesize(ObjectManager::class);
-        $objectManagerProphecy->get(ProjectVersionService::class)->willReturn($projectVersionServiceProphecy->reveal());
-
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManagerProphecy->reveal());
         GeneralUtility::setSingletonInstance(ProjectVersionService::class, $projectVersionServiceProphecy->reveal());
 
         $this->subject->getProjectVersion($systemInformationToolbarItemProphecy->reveal());
@@ -89,13 +84,9 @@ class ProjectVersionSlotTest extends UnitTestCase
         $projectVersionServiceProphecy = $this->prophesize(ProjectVersionService::class);
         $projectVersionServiceProphecy->getProjectVersion()->willReturn($projectVersion);
 
-        $objectManagerProphecy = $this->prophesize(ObjectManager::class);
-        $objectManagerProphecy->get(ProjectVersionService::class)->willReturn($projectVersionServiceProphecy->reveal());
-
         $localizationServiceProphecy = $this->prophesize(LanguageService::class);
         $localizationServiceProphecy->sL($initialVersionValue)->willReturn($expectedVersion);
 
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManagerProphecy->reveal());
         GeneralUtility::setSingletonInstance(ProjectVersionService::class, $projectVersionServiceProphecy->reveal());
         GeneralUtility::addInstance(LanguageService::class, $localizationServiceProphecy->reveal());
 
