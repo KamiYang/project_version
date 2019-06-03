@@ -29,13 +29,27 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ProjectVersionService implements SingletonInterface
 {
     /**
-     * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade
-     */
-    protected $systemEnvironmentBuilderFacade;
-    /**
      * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
      */
-    protected $commandUtilityFacade;
+    protected $commandUtility;
+
+    /**
+     * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade
+     */
+    protected $systemEnvironmentBuilder;
+
+    /**
+     * ProjectVersionService constructor.
+     * @param \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade $systemEnvironmentBuilder
+     * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtility
+     */
+    public function __construct(
+        CommandUtilityFacade $commandUtility,
+        SystemEnvironmentBuilderFacade $systemEnvironmentBuilder
+    ) {
+        $this->systemEnvironmentBuilder = $systemEnvironmentBuilder;
+        $this->commandUtility = $commandUtility;
+    }
 
     /**
      * @api
@@ -97,40 +111,20 @@ class ProjectVersionService implements SingletonInterface
     }
 
     /**
-     * SystemEnvironmentBuilderFacade injector.
-     *
-     * @param \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade
-     */
-    public function injectSystemEnvironmentBuilderFacade(SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade)
-    {
-        $this->systemEnvironmentBuilderFacade = $systemEnvironmentBuilderFacade;
-    }
-
-    /**
-     * CommandUtilityFacade injector.
-     *
-     * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtilityFacade
-     */
-    public function injectCommandUtilityFacade(CommandUtilityFacade $commandUtilityFacade)
-    {
-        $this->commandUtilityFacade = $commandUtilityFacade;
-    }
-
-    /**
      * @return bool
      */
     protected function isGitAvailable(): bool
     {
-        return $this->systemEnvironmentBuilderFacade->isFunctionDisabled('exec') === false &&
+        return $this->systemEnvironmentBuilder->isFunctionDisabled('exec') === false &&
             // check if git exists
-            $this->commandUtilityFacade->exec('git --version', $_, $returnCode) &&
+            $this->commandUtility->exec('git --version', $_, $returnCode) &&
             $returnCode === 0;
     }
 
     /**
      * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
      */
-    private function setStaticVersion(ProjectVersion $projectVersion)
+    private function setStaticVersion(ProjectVersion $projectVersion): void
     {
         $projectVersion->setVersion(ExtensionConfiguration::getStaticVersion());
     }
@@ -140,7 +134,7 @@ class ProjectVersionService implements SingletonInterface
      *
      * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
      */
-    private function setVersionFromFile(ProjectVersion $projectVersion)
+    private function setVersionFromFile(ProjectVersion $projectVersion): void
     {
         $versionFilePath = ExtensionConfiguration::getAbsVersionFilePath();
         if (\file_exists($versionFilePath)) {
@@ -152,7 +146,7 @@ class ProjectVersionService implements SingletonInterface
     /**
      * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
      */
-    private function setVersionFromGit(ProjectVersion $projectVersion)
+    private function setVersionFromGit(ProjectVersion $projectVersion): void
     {
         if ($this->isGitAvailable() === false) {
             return;
@@ -161,14 +155,8 @@ class ProjectVersionService implements SingletonInterface
         $version = $this->getVersionByFormat();
 
         if (!empty($version)) {
-            /*
-             * The icon identifier for "git" changed between TYPO3 v8 and v9.
-             * For TYPO3 v8 it's "sysinfo-git" and for v9 it's "information-git"
-             */
-            $gitIconIdentifier = (float)TYPO3_version < 9 ? 'sysinfo-git' : 'information-git';
-
             $projectVersion->setVersion($version);
-            $projectVersion->setIconIdentifier($gitIconIdentifier);
+            $projectVersion->setIconIdentifier('information-git');
         }
     }
 
@@ -177,9 +165,9 @@ class ProjectVersionService implements SingletonInterface
      */
     private function getVersionByFormat(): string
     {
-        $branch = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_BRANCH));
-        $revision = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_REVISION));
-        $tag = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_TAG));
+        $branch = \trim($this->commandUtility->exec(GitCommandEnumeration::CMD_BRANCH));
+        $revision = \trim($this->commandUtility->exec(GitCommandEnumeration::CMD_REVISION));
+        $tag = \trim($this->commandUtility->exec(GitCommandEnumeration::CMD_TAG));
         $format = '';
 
         if ($branch || $revision || $tag) {

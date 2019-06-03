@@ -16,7 +16,7 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
  */
 
 use KamiYang\ProjectVersion\Service\ProjectVersion;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class ProjectVersionTest
@@ -26,7 +26,7 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @var \KamiYang\ProjectVersion\Service\ProjectVersion
      */
-    private $subject;
+    protected $subject;
 
     protected function setUp()
     {
