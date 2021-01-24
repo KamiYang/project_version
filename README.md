@@ -13,7 +13,7 @@ First make sure you match the requirements:
 
 | Requirement | Version |
 | --- | --- |
-| TYPO3 | \>=8.7 <9.6 |
+| TYPO3 | \>=9.5 <10.5 |
 | php | \>= 7.0 |
 
 ### Composer

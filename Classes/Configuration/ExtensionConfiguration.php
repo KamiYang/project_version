@@ -20,6 +20,7 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class ExtensionConfiguration
@@ -116,12 +117,7 @@ final class ExtensionConfiguration implements SingletonInterface
      */
     private function getExtensionConfigurationFromGlobals(): array
     {
-        $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['project_version'];
-
-        if (is_string($configuration)) {
-            $configuration = @unserialize($configuration);
-        }
-
+        $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['project_version'];
         return $configuration ?? [];
     }
 
