@@ -15,7 +15,7 @@ namespace KamiYang\ProjectVersion\Facade;
  * LICENSE file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class SystemEnvironmentBuilderFacade
@@ -34,6 +34,10 @@ class SystemEnvironmentBuilderFacade
      */
     public function isFunctionDisabled($function): bool
     {
-        return SystemEnvironmentBuilder::isFunctionDisabled($function);
+        $disabledFunctions = GeneralUtility::trimExplode(',', (string)ini_get('disable_functions'));
+        if (!empty($disabledFunctions)) {
+            return in_array($function, $disabledFunctions, true);
+        }
+        return false;
     }
 }

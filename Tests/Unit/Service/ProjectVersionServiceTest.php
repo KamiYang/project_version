@@ -337,7 +337,7 @@ class ProjectVersionServiceTest extends UnitTestCase
 
     protected function setUpExtensionConfiguration()
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['project_version'] = serialize($this->extensionConfiguration);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['project_version'] = $this->extensionConfiguration;
 
         GeneralUtility::makeInstance(ExtensionConfiguration::class);
     }
