@@ -16,6 +16,7 @@ namespace KamiYang\ProjectVersion\Configuration;
  */
 
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -64,7 +65,8 @@ final class ExtensionConfiguration implements SingletonInterface
      */
     public static function getAbsVersionFilePath(): string
     {
-        return GeneralUtility::getFileAbsFileName(self::getVersionFilePath());
+        $path = GeneralUtility::resolveBackPath(Environment::getPublicPath() . '/' . self::getVersionFilePath());
+        return GeneralUtility::getFileAbsFileName($path);
     }
 
     /**

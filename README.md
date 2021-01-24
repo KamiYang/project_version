@@ -45,6 +45,7 @@ We assume that the web document root (`PATH_site`) is `/var/www/html`.
 | MyVersion | /var/www/html/MyVersion |
 | typo3conf/ | /var/www/html/typo3conf/VERSION |
 | ./My/Custom/Version/File/In/Some/Nested/File/Structure | /var/www/html/./My/Custom/Version/File/In/Some/Nested/File/Structure|
+| ../ | /var/www/VERSION|
 
 ### GIT
 Since release 0.3.0 git is supported. This must be manually activated. In order to use git, make sure it's available!
