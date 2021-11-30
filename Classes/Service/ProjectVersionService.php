@@ -157,6 +157,6 @@ class ProjectVersionService implements SingletonInterface
 
     private function isExecEnabled(): bool
     {
-        return in_array('exec', GeneralUtility::trimExplode(',', ini_get('disable_functions')));
+        return !in_array('exec', GeneralUtility::trimExplode(',', ini_get('disable_functions')), true);
     }
 }

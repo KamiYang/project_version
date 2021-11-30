@@ -16,19 +16,27 @@ namespace KamiYang\ProjectVersion\EventListener;
  * LICENSE file that was distributed with this source code.
  */
 
-use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use TYPO3\CMS\Backend\Backend\Event\SystemInformationToolbarCollectorEvent;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 final class ProjectVersionEventListener
 {
+    /**
+     * @var \KamiYang\ProjectVersion\Service\ProjectVersionService
+     */
     private $projectVersionService;
 
-    public function __construct(ProjectVersionService $projectVersionService)
+    /**
+     * @var \TYPO3\CMS\Core\Localization\LanguageService
+     */
+    private $languageService;
+
+    public function __construct(ProjectVersionService $projectVersionService, LanguageService $languageService)
     {
         $this->projectVersionService = $projectVersionService;
+        $this->languageService = $languageService;
     }
 
     public function __invoke(SystemInformationToolbarCollectorEvent $event)
@@ -38,7 +46,7 @@ final class ProjectVersionEventListener
         $version = $projectVersion->getVersion();
 
         if (StringUtility::beginsWith($version, 'LLL:')) {
-            $version = GeneralUtility::makeInstance(LocalizationUtilityFacade::class)->translate($version);
+            $version = $this->languageService->sL($version);
         }
 
         $event->getToolbarItem()->addSystemInformation(
