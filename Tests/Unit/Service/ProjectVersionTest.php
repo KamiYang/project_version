@@ -37,7 +37,7 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function getTitleShouldReturnInitialValue()
+    public function getTitleShouldReturnInitialValue(): void
     {
         static::assertSame(
             'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version',
@@ -48,43 +48,48 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function setTitleShouldSetPropertyTitle()
+    public function setTitleShouldSetPropertyTitle(): void
     {
         $newValue = 'Project Version is awesome!';
 
         $this->subject->setTitle($newValue);
 
-        static::assertAttributeSame($newValue, 'title', $this->subject);
-    }
-
-    /**
-     * @test
-     */
-    public function initialVersionValueShouldBeLLLString()
-    {
-        static::assertAttributeSame(
-            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown',
-            'version',
-            $this->subject
+        static::assertSame(
+            $newValue,
+            $this->subject->getTitle()
         );
     }
 
     /**
      * @test
      */
-    public function setVersionShouldSetPropertyVersion()
+    public function initialVersionValueShouldBeLLLString(): void
     {
-        $newValue = 'Project Version is awesome!';
-
-        $this->subject->setVersion($newValue);
-
-        static::assertAttributeSame($newValue, 'version', $this->subject);
+        static::assertSame(
+            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown',
+            $this->subject->getVersion()
+        );
     }
 
     /**
      * @test
      */
-    public function getIconIdentifierShouldReturnInitialValue()
+    public function setVersionShouldSetPropertyVersion(): void
+    {
+        $newValue = 'Project Version is awesome!';
+
+        $this->subject->setVersion($newValue);
+
+        static::assertSame(
+            $newValue,
+            $this->subject->getVersion()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getIconIdentifierShouldReturnInitialValue(): void
     {
         static::assertSame('information-project-version', $this->subject->getIconIdentifier());
     }
@@ -92,12 +97,15 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function setIconIdentifierShouldSetPropertyIconIdentifier()
+    public function setIconIdentifierShouldSetPropertyIconIdentifier(): void
     {
         $newValue = 'Project Version is awesome!';
 
         $this->subject->setIconIdentifier($newValue);
 
-        static::assertAttributeSame($newValue, 'iconIdentifier', $this->subject);
+        static::assertSame(
+            $newValue,
+            $this->subject->getIconIdentifier()
+        );
     }
 }
