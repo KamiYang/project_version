@@ -16,16 +16,21 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
  * LICENSE file that was distributed with this source code.
  */
 
+use Generator;
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
 use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
 use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
-use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use function array_replace;
+use function ini_get;
+use function ini_set;
+use function var_dump;
 
 /**
  * Class ProjectVersionServiceTest
@@ -37,17 +42,12 @@ class ProjectVersionServiceTest extends UnitTestCase
      */
     private $subject;
 
-    private $extensionConfiguration = [
+    private $defaultExtensionConfiguration = [
         'gitFormat' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
         'mode' => ProjectVersionModeEnumeration::FILE,
         'staticVersion' => '',
         'versionFilePath' => 'VERSION'
     ];
-
-    /**
-     * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade|\Prophecy\Prophecy\ObjectProphecy
-     */
-    private $systemEnvironmentBuilderFacadeProphecy;
 
     /**
      * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
@@ -57,15 +57,18 @@ class ProjectVersionServiceTest extends UnitTestCase
     /**
      * @test
      */
-    public function getProjectVersionShouldNotSetProjectVersionIfVersionFileIsNotFound()
+    public function getProjectVersionShouldNotSetProjectVersionIfVersionFileIsNotFound(): void
     {
-        $this->extensionConfiguration['versionFilePath'] = '/some/not/existing/path';
-        $this->setUpExtensionConfiguration();
+        $this->setUpExtensionConfiguration([
+            'versionFilePath' => '/some/not/existing/path'
+        ]);
 
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
         GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
-
-        $this->subject->getProjectVersion();
+        new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
+        );
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
@@ -76,56 +79,56 @@ class ProjectVersionServiceTest extends UnitTestCase
      * @param string $versionFilePath
      * @dataProvider versionFilePathDataProvider
      */
-    public function getProjectVersionShouldSetVersionFromVersionFileIfFileExists(string $versionFilePath)
+    public function getProjectVersionShouldSetVersionFromVersionFileIfFileExists(string $versionFilePath): void
     {
-        $this->extensionConfiguration['versionFilePath'] = $versionFilePath;
-        $this->setUpExtensionConfiguration();
+        $this->setUpExtensionConfiguration(['versionFilePath' => $versionFilePath]);
 
-        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
-        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+        $subject = new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
+        );
 
-        $this->subject->getProjectVersion();
-
-        $projectVersionProphecy->setVersion(Argument::containingString('1.0.1'))
-            ->shouldHaveBeenCalledTimes(1);
+        self::assertEquals(
+            '1.0.1',
+            $subject->getProjectVersion()->getVersion()
+        );
     }
 
-    /**
-     * @return array
-     */
-    public function versionFilePathDataProvider(): array
+    public function versionFilePathDataProvider(): Generator
     {
-        return [
-            'version file with EXT shortcut' => [
-                'EXT:project_version/Tests/Fixture/VERSION'
-            ],
-            'directory with EXT shortcut' => [
-                'EXT:project_version/Tests/Fixture/'
-            ],
-            'Version file with EXT shortcut and different filename' => [
-                'EXT:project_version/Tests/Fixture/VersionFileWithDifferentName'
-            ]
+        yield 'version file with EXT shortcut' => [
+            'EXT:project_version/Tests/Fixture/VERSION'
+        ];
+        yield 'directory with EXT shortcut' => [
+            'EXT:project_version/Tests/Fixture/'
+        ];
+        yield 'Version file with EXT shortcut and different filename' => [
+            'EXT:project_version/Tests/Fixture/VersionFileWithDifferentName'
         ];
     }
 
     /**
      * @test
      */
-    public function getProjectVersionShouldNotSetVersionFromGitIfCommandExecIsNotAvailable()
+    public function getProjectVersionShouldNotSetVersionFromGitIfCommandExecIsNotAvailable(): void
     {
-        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::GIT;
-        $this->setUpExtensionConfiguration();
+        $this->setUpExtensionConfiguration(['mode' => ProjectVersionModeEnumeration::GIT]);
 
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
         GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
 
-        $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
-            ->willReturn(true);
+        $originalDisbableFunctions = ini_get('disable_functions');
+        ini_set('disable_functions', 'exec');
 
-        $this->subject->getProjectVersion();
+        new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
+        );
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
+
+        ini_set('disable_functions', $originalDisbableFunctions);
     }
 
     /**
@@ -145,30 +148,28 @@ class ProjectVersionServiceTest extends UnitTestCase
         string $revision,
         string $tag,
         string $expected
-    ) {
-        // Arrange
-        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::GIT;
-        $this->extensionConfiguration['gitFormat'] = $format;
-        $this->setUpExtensionConfiguration();
-
-        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
-        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
-
+    ): void {
+        $this->setUpExtensionConfiguration([
+            'mode' => ProjectVersionModeEnumeration::GIT,
+            'gitFormat' => $format
+        ]);
+        $this->commandUtilityFacadeProphecy->exec('git --version', Argument::cetera())
+            ->will(function (&$arguments) {
+                $arguments[2] = 0;
+            });
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_BRANCH)->willReturn($branch);
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_REVISION)->willReturn($revision);
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->willReturn($tag);
 
-        /** @var \KamiYang\ProjectVersion\Service\ProjectVersionService|\PHPUnit\Framework\MockObject\MockObject $subject */
-        $subject = $this->createPartialMock(ProjectVersionService::class, ['isGitAvailable']);
-        $subject->method('isGitAvailable')->willReturn(true);
-        $subject->injectCommandUtilityFacade($this->commandUtilityFacadeProphecy->reveal());
-        $subject->injectSystemEnvironmentBuilderFacade($this->systemEnvironmentBuilderFacadeProphecy->reveal());
+        $subject = new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
+        );
 
-        // Act
-        $actual = $subject->getProjectVersion();
-
-        // Assert
-        $projectVersionProphecy->setVersion($expected)->shouldHaveBeenCalled();
+        static::assertSame(
+            $expected,
+            $subject->getProjectVersion()->getVersion()
+        );
 
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_BRANCH)->shouldHaveBeenCalledTimes(1);
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_REVISION)->shouldHaveBeenCalledTimes(1);
@@ -178,108 +179,102 @@ class ProjectVersionServiceTest extends UnitTestCase
     /**
      * @test
      */
-    public function getProjectVersionShouldTryToFetchVersionFromFileIfResolvingUsingGitErrored()
+    public function getProjectVersionShouldTryToFetchVersionFromFileIfResolvingUsingGitErrored(): void
     {
         //Arrange
-        $this->extensionConfiguration['versionFilePath'] = 'EXT:project_version/Tests/Fixture/VERSION';
-        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::GIT_FILE_FALLBACK;
-        $this->extensionConfiguration['gitFormat'] = GitCommandEnumeration::FORMAT_REVISION_BRANCH;
-        $this->setUpExtensionConfiguration();
+        $versionFilePath = 'EXT:project_version/Tests/Fixture/VERSION';
+        $this->setUpExtensionConfiguration([
+            'versionFilePath' => $versionFilePath,
+            'mode' => ProjectVersionModeEnumeration::GIT_FILE_FALLBACK,
+            'gitFormat' => GitCommandEnumeration::FORMAT_REVISION_BRANCH
+        ]);
         $branch = '';
         $revision = '';
         $tag = '';
-        $absoluteVersionFilename = GeneralUtility::getFileAbsFileName($this->extensionConfiguration['versionFilePath']);
-        $expected = \file_get_contents($absoluteVersionFilename);
-
-        $projectVersion = new ProjectVersion();
-        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersion);
+        $absoluteVersionFilename = GeneralUtility::getFileAbsFileName($versionFilePath);
+        $expected = trim(file_get_contents($absoluteVersionFilename));
 
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_BRANCH)->willReturn($branch);
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_REVISION)->willReturn($revision);
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->willReturn($tag);
+        $this->commandUtilityFacadeProphecy->exec('git --version', $_, $returnCode)->willReturn(0);
 
-        /** @var \KamiYang\ProjectVersion\Service\ProjectVersionService $subject */
-        $subject = $this->createPartialMock(ProjectVersionService::class, ['isGitAvailable']);
-        $subject->method('isGitAvailable')->willReturn(true);
-        $subject->injectCommandUtilityFacade($this->commandUtilityFacadeProphecy->reveal());
-        $subject->injectSystemEnvironmentBuilderFacade($this->systemEnvironmentBuilderFacadeProphecy->reveal());
-
-        // Act
-        $subject->getProjectVersion();
-
-        // Assert
-        static::assertSame($expected, $projectVersion->getVersion());
+        $subject = new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
+        );
+        static::assertSame($expected, $subject->getProjectVersion()->getVersion());
     }
 
     /**
      * @return array
      */
-    public function gitFormatDataProvider(): array
+    public function gitFormatDataProvider(): Generator
     {
         $branch = 'master';
         $revision = 'abcdefg';
         $tag = '9.0.42-rc.2';
 
-        return [
-            'default git format' => [
-                'format' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
-                'branch' => $branch,
-                'revision' => $revision,
-                'tag' => $tag,
-                'expected' => "[{$revision}] {$branch}"
-            ],
-            'git format: revision' => [
-                'format' => GitCommandEnumeration::FORMAT_REVISION,
-                'branch' => $branch,
-                'revision' => $revision,
-                'tag' => $tag,
-                'expected' => "{$revision}"
-            ],
-            'git format: [revision] branch' => [
-                'format' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
-                'branch' => $branch,
-                'revision' => $revision,
-                'tag' => $tag,
-                'expected' => "[{$revision}] {$branch}"
-            ],
-            'git format: [revision] tag' => [
-                'format' => GitCommandEnumeration::FORMAT_REVISION_TAG,
-                'branch' => $branch,
-                'revision' => $revision,
-                'tag' => $tag,
-                'expected' => "[{$revision}] {$tag}"
-            ],
-            'git format: branch' => [
-                'format' => GitCommandEnumeration::FORMAT_BRANCH,
-                'branch' => $branch,
-                'revision' => $revision,
-                'tag' => $tag,
-                'expected' => "{$branch}"
-            ],
-            'git format: tag' => [
-                'format' => GitCommandEnumeration::FORMAT_TAG,
-                'branch' => $branch,
-                'revision' => $revision,
-                'tag' => $tag,
-                'expected' => "{$tag}"
-            ],
+        yield 'default git format' => [
+            'format' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
+            'branch' => $branch,
+            'revision' => $revision,
+            'tag' => $tag,
+            'expected' => "[{$revision}] {$branch}"
+        ];
+        yield 'git format: revision' => [
+            'format' => GitCommandEnumeration::FORMAT_REVISION,
+            'branch' => $branch,
+            'revision' => $revision,
+            'tag' => $tag,
+            'expected' => "{$revision}"
+        ];
+        yield 'git format: [revision] branch' => [
+            'format' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
+            'branch' => $branch,
+            'revision' => $revision,
+            'tag' => $tag,
+            'expected' => "[{$revision}] {$branch}"
+        ];
+        yield 'git format: [revision] tag' => [
+            'format' => GitCommandEnumeration::FORMAT_REVISION_TAG,
+            'branch' => $branch,
+            'revision' => $revision,
+            'tag' => $tag,
+            'expected' => "[{$revision}] {$tag}"
+        ];
+        yield 'git format: branch' => [
+            'format' => GitCommandEnumeration::FORMAT_BRANCH,
+            'branch' => $branch,
+            'revision' => $revision,
+            'tag' => $tag,
+            'expected' => "{$branch}"
+        ];
+        yield 'git format: tag' => [
+            'format' => GitCommandEnumeration::FORMAT_TAG,
+            'branch' => $branch,
+            'revision' => $revision,
+            'tag' => $tag,
+            'expected' => "{$tag}"
         ];
     }
 
     /**
      * @test
      */
-    public function getProjectVersionShouldAlwaysSetStaticVersionIfSelected()
+    public function getProjectVersionShouldAlwaysSetStaticVersionIfSelected(): void
     {
-        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC_VERSION;
-        $this->setUpExtensionConfiguration();
+        $this->setUpExtensionConfiguration(['mode' => ProjectVersionModeEnumeration::STATIC_VERSION]);
 
-        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
-        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+        $subject = new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
+        );
 
-        $this->subject->getProjectVersion();
-
-        $projectVersionProphecy->setVersion('')->shouldHaveBeenCalledTimes(1);
+        static::assertSame(
+            '',
+            $subject->getProjectVersion()->getVersion()
+        );
     }
 
     /**
@@ -287,46 +282,41 @@ class ProjectVersionServiceTest extends UnitTestCase
      * @param string $staticVersion
      * @dataProvider staticVersionDataProvider
      */
-    public function getProjectVersionShouldSetStaticVersionFromExtensionConfigurationIfSelected(string $staticVersion)
-    {
-        $this->extensionConfiguration['mode'] = ProjectVersionModeEnumeration::STATIC_VERSION;
-        $this->extensionConfiguration['staticVersion'] = $staticVersion;
-        $this->setUpExtensionConfiguration();
+    public function getProjectVersionShouldSetStaticVersionFromExtensionConfigurationIfSelected(
+        string $staticVersion
+    ): void {
+        $this->setUpExtensionConfiguration([
+            'mode' => ProjectVersionModeEnumeration::STATIC_VERSION,
+            'staticVersion' => $staticVersion
+        ]);
 
-        $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
-        GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
+        $subject = new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
+        );
 
-        $this->subject->getProjectVersion();
-
-        $projectVersionProphecy->setVersion($staticVersion)->shouldHaveBeenCalledTimes(1);
+        self::assertSame(
+            $staticVersion,
+            $subject->getProjectVersion()->getVersion()
+        );
     }
 
-    public function staticVersionDataProvider(): array
+    public function staticVersionDataProvider(): Generator
     {
-        return [
-            'empty static version (default value)' => [
-                'staticVersion' => ''
-            ],
-            'some value' => [
-                'staticVersion' => 'some value'
-            ],
-            'some extreme long value' => [
-                'staticVersion' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos hic ipsa labore molestiae nesciunt quo repellendus similique tenetur vitae voluptatem! Dicta dolor minus nostrum ratione voluptas? Ad animi iste sunt!'
-            ]
+        yield 'empty static version (default value)' => [
+            'staticVersion' => ''
+        ];
+        yield 'some value' => [
+            'staticVersion' => 'some value'
+        ];
+        yield 'some extreme long value' => [
+            'staticVersion' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos hic ipsa labore molestiae nesciunt quo repellendus similique tenetur vitae voluptatem! Dicta dolor minus nostrum ratione voluptas? Ad animi iste sunt!'
         ];
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->systemEnvironmentBuilderFacadeProphecy = $this->prophesize(SystemEnvironmentBuilderFacade::class);
-        $this->systemEnvironmentBuilderFacadeProphecy->isFunctionDisabled('exec')
-            ->willReturn(false);
-
         $this->commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
-
-        $this->subject = new ProjectVersionService();
-        $this->subject->injectCommandUtilityFacade($this->commandUtilityFacadeProphecy->reveal());
-        $this->subject->injectSystemEnvironmentBuilderFacade($this->systemEnvironmentBuilderFacadeProphecy->reveal());
     }
 
     protected function tearDown(): void
@@ -336,10 +326,11 @@ class ProjectVersionServiceTest extends UnitTestCase
         parent::tearDown();
     }
 
-    protected function setUpExtensionConfiguration()
+    protected function setUpExtensionConfiguration(array $extConfig): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['project_version'] = serialize($this->extensionConfiguration);
-
-        GeneralUtility::makeInstance(ExtensionConfiguration::class);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['project_version'] = array_replace(
+            $this->defaultExtensionConfiguration,
+            $extConfig
+        );
     }
 }

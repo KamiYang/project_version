@@ -18,6 +18,8 @@ namespace KamiYang\ProjectVersion\Service;
 
 use TYPO3\CMS\Core\SingletonInterface;
 
+use function trim;
+
 /**
  * Class ProjectVersion
  */
@@ -70,7 +72,7 @@ class ProjectVersion implements SingletonInterface
      */
     public function setVersion(string $version): void
     {
-        $this->version = $version;
+        $this->version = trim($version);
     }
 
     /**
