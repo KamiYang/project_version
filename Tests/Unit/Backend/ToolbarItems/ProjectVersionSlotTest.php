@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
@@ -34,12 +35,12 @@ class ProjectVersionSlotTest extends UnitTestCase
      */
     private $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = new ProjectVersionSlot();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         GeneralUtility::purgeInstances();
 
@@ -47,7 +48,6 @@ class ProjectVersionSlotTest extends UnitTestCase
     }
 
     /**
-     * @test
      */
     public function getProjectVersionShouldAddProjectVersionAsSystemInformation()
     {

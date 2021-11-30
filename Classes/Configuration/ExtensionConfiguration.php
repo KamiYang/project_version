@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Configuration;
@@ -25,19 +26,21 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 final class ExtensionConfiguration implements SingletonInterface
 {
+    private const DEFAULT_VERSION_FILE = 'VERSION';
+
     /**
      * Extension configuration.
      *
      * @var array
      */
-    private static $configuration = [];
+    private $configuration;
 
     /**
      * Relative file path of the VERSION-file. Blank equals const 'PATH_site'.
      *
      * @var string
      */
-    private static $versionFilePath = '';
+    private $versionFilePath;
 
     /**
      * Indicator for the fetching method.
@@ -45,104 +48,76 @@ final class ExtensionConfiguration implements SingletonInterface
      * @var string
      * @see \KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration
      */
-    private static $mode = ProjectVersionModeEnumeration::FILE;
+    private $mode;
 
     /**
      * @var string
      */
-    private static $gitFormat = '';
+    private $gitFormat;
 
     /**
      * @var string
      */
-    private static $staticVersion = '';
+    private $staticVersion;
 
     /**
      * Fetch absolute version filename.
      *
      * @return string
      */
-    public static function getAbsVersionFilePath(): string
+    public function getAbsVersionFilePath(): string
     {
-        return GeneralUtility::getFileAbsFileName(self::getVersionFilePath());
+        return GeneralUtility::getFileAbsFileName($this->getVersionFilePath());
     }
 
-    /**
-     * @return string
-     */
-    public static function getVersionFilePath(): string
+    public function getVersionFilePath(): string
     {
-        return self::$versionFilePath;
+        return $this->versionFilePath;
     }
 
-    /**
-     * @return string
-     */
-    public static function getMode(): string
+    public function getMode(): string
     {
-        return self::$mode;
+        return $this->mode;
     }
 
-    /**
-     * @return string
-     */
-    public static function getGitFormat(): string
+    public function getGitFormat(): string
     {
-        return self::$gitFormat;
+        return $this->gitFormat;
     }
 
-    /**
-     * @return string
-     */
-    public static function getStaticVersion(): string
+    public function getStaticVersion(): string
     {
-        return self::$staticVersion;
+        return $this->staticVersion;
     }
 
     public function __construct()
     {
-        self::$configuration = $this->getExtensionConfigurationFromGlobals();
+        $this->configuration = $this->getExtensionConfigurationFromGlobals();
 
-        self::$versionFilePath = $this->resolveVersionFilePath();
-        self::$mode = self::$configuration['mode'];
-        self::$gitFormat = self::$configuration['gitFormat'];
-        self::$staticVersion = self::$configuration['staticVersion'];
+        $this->versionFilePath = $this->resolveVersionFilePath();
+        $this->mode = $this->configuration['mode'] ?? ProjectVersionModeEnumeration::FILE;
+        $this->gitFormat = $this->configuration['gitFormat'] ?? '';
+        $this->staticVersion = $this->configuration['staticVersion'] ?? '';
     }
 
-    /**
-     * @return array
-     */
     private function getExtensionConfigurationFromGlobals(): array
     {
-        $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['project_version'];
-
-        if (is_string($configuration)) {
-            $configuration = @unserialize($configuration);
-        }
-
-        return $configuration ?? [];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['project_version'] ?? [];
     }
 
-    /**
-     * @return string
-     */
     private function resolveVersionFilePath(): string
     {
-        $pathFromConfiguration = self::$configuration['versionFilePath'] ?? '';
+        $pathFromConfiguration = $this->configuration['versionFilePath'] ?? '';
 
         if (empty($pathFromConfiguration) || $this->isDirectory($pathFromConfiguration)) {
-            $pathFromConfiguration .= 'VERSION';
+            $pathFromConfiguration .= self::DEFAULT_VERSION_FILE;
         }
 
         return $pathFromConfiguration;
     }
 
-    /**
-     * @param string $pathFromConfiguration
-     * @return bool
-     */
     private function isDirectory(string $pathFromConfiguration): bool
     {
-        return StringUtility::endsWith($pathFromConfiguration, '/') === true;
+        return StringUtility::endsWith($pathFromConfiguration, '/');
     }
 }

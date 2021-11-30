@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
@@ -328,7 +329,7 @@ class ProjectVersionServiceTest extends UnitTestCase
         $this->subject->injectSystemEnvironmentBuilderFacade($this->systemEnvironmentBuilderFacadeProphecy->reveal());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         GeneralUtility::purgeInstances();
 

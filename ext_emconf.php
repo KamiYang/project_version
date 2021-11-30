@@ -2,7 +2,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Project Version',
-    'description' => 'Displays current project version based on \'VERSION\' file or GIT revision.',
+    'description' => 'Displays current project version based on a \'VERSION\' file or GIT revision.',
     'category' => 'misc',
     'state' => 'stable',
     'uploadfolder' => 0,
@@ -14,7 +14,7 @@ $EM_CONF[$_EXTKEY] = [
     'constraints' => [
         'depends' => [
             'php' => '7.0',
-            'typo3' => '9.5.0-9.5.99'
+            'typo3' => '10.4.0-11.5.99'
         ],
         'conflicts' => [
         ],

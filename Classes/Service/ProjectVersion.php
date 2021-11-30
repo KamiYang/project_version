@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Service;
@@ -22,12 +23,13 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class ProjectVersion implements SingletonInterface
 {
-    const UNKNOWN_VERSION = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
+    public const UNKNOWN_VERSION = self::LLL . ':toolbarItems.sysinfo.project-version.unknown';
+    private const LLL = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf';
 
     /**
      * @var string $title
      */
-    protected $title = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version';
+    protected $title = self::LLL . ':toolbarItems.sysinfo.project-version';
 
     /**
      * @var string $version
@@ -50,7 +52,7 @@ class ProjectVersion implements SingletonInterface
     /**
      * @param string $title
      */
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -66,7 +68,7 @@ class ProjectVersion implements SingletonInterface
     /**
      * @param string $version
      */
-    public function setVersion(string $version)
+    public function setVersion(string $version): void
     {
         $this->version = $version;
     }
@@ -82,7 +84,7 @@ class ProjectVersion implements SingletonInterface
     /**
      * @param string $iconIdentifier
      */
-    public function setIconIdentifier(string $iconIdentifier)
+    public function setIconIdentifier(string $iconIdentifier): void
     {
         $this->iconIdentifier = $iconIdentifier;
     }

@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Backend\ToolbarItems;
+namespace KamiYang\ProjectVersion\EventListener;
 
 /*
  * This file is part of the ProjectVersion project.
@@ -17,25 +18,22 @@ namespace KamiYang\ProjectVersion\Backend\ToolbarItems;
 
 use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;
 use KamiYang\ProjectVersion\Service\ProjectVersionService;
-use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
-use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Backend\Backend\Event\SystemInformationToolbarCollectorEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Class ProjectVersionSlot
- */
-final class ProjectVersionSlot implements SingletonInterface
+final class ProjectVersionEventListener
 {
-    /**
-     * @param \TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem $pObj
-     */
-    public function getProjectVersion(SystemInformationToolbarItem $pObj)
+    private $projectVersionService;
+
+    public function __construct(ProjectVersionService $projectVersionService)
     {
-        $projectVersion = GeneralUtility::makeInstance(ObjectManager::class)
-            ->get(ProjectVersionService::class)
-            ->getProjectVersion();
+        $this->projectVersionService = $projectVersionService;
+    }
+
+    public function __invoke(SystemInformationToolbarCollectorEvent $event)
+    {
+        $projectVersion = $this->projectVersionService->getProjectVersion();
 
         $version = $projectVersion->getVersion();
 
@@ -43,7 +41,7 @@ final class ProjectVersionSlot implements SingletonInterface
             $version = GeneralUtility::makeInstance(LocalizationUtilityFacade::class)->translate($version);
         }
 
-        $pObj->addSystemInformation(
+        $event->getToolbarItem()->addSystemInformation(
             $projectVersion->getTitle(),
             $version,
             $projectVersion->getIconIdentifier()
