@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v3
@@ -17,9 +17,9 @@ jobs:
           tools: composer:v1
       - name: Validate composer.json
         run: composer validate --strict
-  ci:
+  test:
     runs-on: ubuntu-18.04
-    needs: [ setup ]
+    needs: build
     strategy:
       matrix:
         typo3_version:
