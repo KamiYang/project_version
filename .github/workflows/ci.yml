@@ -12,15 +12,15 @@ jobs:
     strategy:
       matrix:
         typo3_version:
-          - 10.5.20
-          - 10.5.21
-#          - 10.5.22
-#          - 10.5.23
-#          - 10.5.24
-#          - 10.5.25
-#          - 10.5.26
-#          - 10.5.27
-#          - 10.5.28
+          - 10.4.20
+          - 10.4.21
+#          - 10.4.22
+#          - 10.4.23
+#          - 10.4.24
+#          - 10.4.25
+#          - 10.4.26
+#          - 10.4.27
+#          - 10.4.28
 #          - 11.5.0
 #          - 11.5.1
 #          - 11.5.2
@@ -60,7 +60,7 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.typo3_version }}-
 
       - name: Install dependencies for TYPO3 version "${{ matrix.typo3_version }}"
-        run: |
+        run: >-
           composer require
             typo3/cms-backend:${{ matrix.typo3_version }}
             typo3/cms-core:${{ matrix.typo3_version }}
