@@ -36,11 +36,11 @@ use function trim;
 class ProjectVersionService implements SingletonInterface
 {
     /**
-     * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
+     * @var CommandUtilityFacade
      */
     protected $commandUtilityFacade;
     /**
-     * @var \KamiYang\ProjectVersion\Configuration\ExtensionConfiguration
+     * @var ExtensionConfiguration
      */
     protected $extensionConfiguration;
 
@@ -56,7 +56,6 @@ class ProjectVersionService implements SingletonInterface
     public function getProjectVersion(): ProjectVersion
     {
         $projectVersion = GeneralUtility::makeInstance(ProjectVersion::class);
-
         switch ($this->extensionConfiguration->getMode()) {
             case ProjectVersionModeEnumeration::STATIC_VERSION:
                 $this->setStaticVersion($projectVersion);
@@ -66,7 +65,6 @@ class ProjectVersionService implements SingletonInterface
                 break;
             case ProjectVersionModeEnumeration::GIT_FILE_FALLBACK:
                 $this->setVersionFromGit($projectVersion);
-
                 if ($projectVersion->getVersion() === ProjectVersion::UNKNOWN_VERSION) {
                     //if version is still unknown, try to resolve version by file
                     $this->setVersionFromFile($projectVersion);
@@ -78,6 +76,18 @@ class ProjectVersionService implements SingletonInterface
         }
 
         return $projectVersion;
+    }
+
+    /**
+     * @internal protected so we can mock it in unit tests.
+     * @return bool
+     */
+    protected function isGitAvailable(): bool
+    {
+        return $this->isExecEnabled() &&
+            // check if git exists
+            $this->commandUtilityFacade->exec('git --version', $_, $returnCode) &&
+            $returnCode === 0;
     }
 
     private function formatVersion($revision, $tag, $branch): string
@@ -103,14 +113,6 @@ class ProjectVersionService implements SingletonInterface
         return $format;
     }
 
-    protected function isGitAvailable(): bool
-    {
-        return $this->isExecEnabled() &&
-            // check if git exists
-            $this->commandUtilityFacade->exec('git --version', $_, $returnCode) &&
-            $returnCode === 0;
-    }
-
     private function setStaticVersion(ProjectVersion $projectVersion): void
     {
         $projectVersion->setVersion($this->extensionConfiguration->getStaticVersion());
@@ -132,7 +134,6 @@ class ProjectVersionService implements SingletonInterface
         }
 
         $version = $this->getVersionByFormat();
-
         if (!empty($version)) {
             $gitIconIdentifier = 'information-git';
 

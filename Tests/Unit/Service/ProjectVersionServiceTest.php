@@ -64,10 +64,7 @@ class ProjectVersionServiceTest extends UnitTestCase
 
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
         GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
-        new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            new ExtensionConfiguration()
-        );
+        $_ = $this->getSubject();
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
@@ -82,10 +79,7 @@ class ProjectVersionServiceTest extends UnitTestCase
     {
         $this->setUpExtensionConfiguration(['versionFilePath' => $versionFilePath]);
 
-        $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            new ExtensionConfiguration()
-        );
+        $subject = $this->getSubject();
 
         self::assertEquals(
             '1.0.1',
@@ -119,10 +113,7 @@ class ProjectVersionServiceTest extends UnitTestCase
         $originalDisbableFunctions = ini_get('disable_functions');
         ini_set('disable_functions', 'exec');
 
-        new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            new ExtensionConfiguration()
-        );
+        $_ = $this->getSubject();
 
         $projectVersionProphecy->setVersion(Argument::any())
             ->shouldNotHaveBeenCalled();
@@ -162,8 +153,7 @@ class ProjectVersionServiceTest extends UnitTestCase
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->willReturn($tag);
 
         $subject = $this->createPartialMock(ProjectVersionService::class, ['isGitAvailable']);
-        $dependency = new ExtensionConfiguration();
-        $this->inject($subject, 'extensionConfiguration', $dependency);
+        $this->inject($subject, 'extensionConfiguration', new ExtensionConfiguration());
         $this->inject($subject, 'commandUtilityFacade', $this->commandUtilityFacadeProphecy->reveal());
         $subject
             ->expects(self::once())
@@ -185,7 +175,6 @@ class ProjectVersionServiceTest extends UnitTestCase
      */
     public function getProjectVersionShouldTryToFetchVersionFromFileIfResolvingUsingGitErrored(): void
     {
-        //Arrange
         $versionFilePath = 'EXT:project_version/Tests/Fixture/VERSION';
         $this->setUpExtensionConfiguration([
             'versionFilePath' => $versionFilePath,
@@ -203,10 +192,8 @@ class ProjectVersionServiceTest extends UnitTestCase
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->willReturn($tag);
         $this->commandUtilityFacadeProphecy->exec('git --version', $_, $returnCode)->willReturn(0);
 
-        $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            new ExtensionConfiguration()
-        );
+        $subject = $this->getSubject();
+
         static::assertSame($expected, $subject->getProjectVersion()->getVersion());
     }
 
@@ -270,10 +257,7 @@ class ProjectVersionServiceTest extends UnitTestCase
     {
         $this->setUpExtensionConfiguration(['mode' => ProjectVersionModeEnumeration::STATIC_VERSION]);
 
-        $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            new ExtensionConfiguration()
-        );
+        $subject = $this->getSubject();
 
         static::assertSame(
             '',
@@ -294,10 +278,7 @@ class ProjectVersionServiceTest extends UnitTestCase
             'staticVersion' => $staticVersion
         ]);
 
-        $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            new ExtensionConfiguration()
-        );
+        $subject = $this->getSubject();
 
         self::assertSame(
             $staticVersion,
@@ -335,6 +316,14 @@ class ProjectVersionServiceTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['project_version'] = array_replace(
             $this->defaultExtensionConfiguration,
             $extConfig
+        );
+    }
+
+    private function getSubject(): ProjectVersionService
+    {
+        return new ProjectVersionService(
+            $this->commandUtilityFacadeProphecy->reveal(),
+            new ExtensionConfiguration()
         );
     }
 }

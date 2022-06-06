@@ -24,12 +24,12 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 final class ProjectVersionEventListener
 {
     /**
-     * @var \KamiYang\ProjectVersion\Service\ProjectVersionService
+     * @var ProjectVersionService
      */
     private $projectVersionService;
 
     /**
-     * @var \TYPO3\CMS\Core\Localization\LanguageService
+     * @var LanguageService
      */
     private $languageService;
 

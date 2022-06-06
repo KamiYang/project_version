@@ -25,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 class ProjectVersionTest extends UnitTestCase
 {
     /**
-     * @var \KamiYang\ProjectVersion\Service\ProjectVersion
+     * @var ProjectVersion
      */
     private $subject;
 

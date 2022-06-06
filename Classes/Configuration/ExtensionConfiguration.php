@@ -46,7 +46,7 @@ final class ExtensionConfiguration implements SingletonInterface
      * Indicator for the fetching method.
      *
      * @var string
-     * @see \KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration
+     * @see ProjectVersionModeEnumeration
      */
     private $mode;
 
@@ -93,7 +93,6 @@ final class ExtensionConfiguration implements SingletonInterface
     public function __construct()
     {
         $this->configuration = $this->getExtensionConfigurationFromGlobals();
-
         $this->versionFilePath = $this->resolveVersionFilePath();
         $this->mode = $this->configuration['mode'] ?? ProjectVersionModeEnumeration::FILE;
         $this->gitFormat = $this->configuration['gitFormat'] ?? '';
@@ -108,7 +107,6 @@ final class ExtensionConfiguration implements SingletonInterface
     private function resolveVersionFilePath(): string
     {
         $pathFromConfiguration = $this->configuration['versionFilePath'] ?? '';
-
         if (empty($pathFromConfiguration) || $this->isDirectory($pathFromConfiguration)) {
             $pathFromConfiguration .= self::DEFAULT_VERSION_FILE;
         }
