@@ -1,8 +1,21 @@
 <?php
+
+/*
+ * This file is part of the ProjectVersion project.
+ *
+ * It is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * For the full copyright and license information, please read
+ * LICENSE file that was distributed with this source code.
+ */
+
 defined('TYPO3_MODE') or die();
 
-call_user_func(function (string $extKey) {
-    if (TYPO3_MODE === 'BE') {
+(static function () {
+    if (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_BE) {
         //Fetch ExtensionConfiguration
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             \KamiYang\ProjectVersion\Configuration\ExtensionConfiguration::class
@@ -17,16 +30,5 @@ call_user_func(function (string $extKey) {
                     'source' => 'EXT:project_version/Resources/Public/Icons/ToolbarItem.svg'
                 ]
             );
-
-        // Add project version to SystemInformation
-        $signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            \TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class
-        );
-        $signalSlotDispatcher->connect(
-            \TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem::class,
-            'getSystemInformation',
-            \KamiYang\ProjectVersion\Backend\ToolbarItems\ProjectVersionSlot::class,
-            'getProjectVersion'
-        );
     }
-}, 'project_version');
+})();

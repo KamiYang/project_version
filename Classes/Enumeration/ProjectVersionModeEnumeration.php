@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Enumeration;
+declare(strict_types=1);
 
 /*
  * This file is part of the ProjectVersion project.
@@ -15,13 +14,15 @@ namespace KamiYang\ProjectVersion\Enumeration;
  * LICENSE file that was distributed with this source code.
  */
 
+namespace KamiYang\ProjectVersion\Enumeration;
+
 /**
  * Class ProjectVersionModeEnumeration
  */
 final class ProjectVersionModeEnumeration
 {
-    const FILE = '0';
-    const GIT = '1';
-    const GIT_FILE_FALLBACK = '2';
-    const STATIC_VERSION = '3';
+    public const FILE = '0';
+    public const GIT = '1';
+    public const GIT_FILE_FALLBACK = '2';
+    public const STATIC_VERSION = '3';
 }

@@ -1,8 +1,20 @@
 <?php
 
+/*
+ * This file is part of the ProjectVersion project.
+ *
+ * It is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * For the full copyright and license information, please read
+ * LICENSE file that was distributed with this source code.
+ */
+
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Project Version',
-    'description' => 'Displays current project version based on \'VERSION\' file or GIT revision.',
+    'description' => 'Displays current project version based on a \'VERSION\' file or GIT revision.',
     'category' => 'misc',
     'state' => 'stable',
     'uploadfolder' => 0,
@@ -13,8 +25,8 @@ $EM_CONF[$_EXTKEY] = [
     'version' => '2.0.0-dev',
     'constraints' => [
         'depends' => [
-            'php' => '7.0',
-            'typo3' => '9.5.0-9.5.99'
+            'php' => '7.4',
+            'typo3' => '10.4.0-11.5.99'
         ],
         'conflicts' => [
         ],

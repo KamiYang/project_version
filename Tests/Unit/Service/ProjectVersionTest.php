@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Tests\Unit\Service;
+declare(strict_types=1);
 
 /*
  * This file is part of the ProjectVersion project.
@@ -15,6 +14,8 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
  * LICENSE file that was distributed with this source code.
  */
 
+namespace KamiYang\ProjectVersion\Tests\Unit\Service;
+
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
@@ -24,11 +25,11 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 class ProjectVersionTest extends UnitTestCase
 {
     /**
-     * @var \KamiYang\ProjectVersion\Service\ProjectVersion
+     * @var ProjectVersion
      */
     private $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = new ProjectVersion();
     }
@@ -36,7 +37,7 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function getTitleShouldReturnInitialValue()
+    public function getTitleShouldReturnInitialValue(): void
     {
         static::assertSame(
             'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version',
@@ -47,43 +48,48 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function setTitleShouldSetPropertyTitle()
+    public function setTitleShouldSetPropertyTitle(): void
     {
         $newValue = 'Project Version is awesome!';
 
         $this->subject->setTitle($newValue);
 
-        static::assertAttributeSame($newValue, 'title', $this->subject);
-    }
-
-    /**
-     * @test
-     */
-    public function initialVersionValueShouldBeLLLString()
-    {
-        static::assertAttributeSame(
-            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown',
-            'version',
-            $this->subject
+        static::assertSame(
+            $newValue,
+            $this->subject->getTitle()
         );
     }
 
     /**
      * @test
      */
-    public function setVersionShouldSetPropertyVersion()
+    public function initialVersionValueShouldBeLLLString(): void
     {
-        $newValue = 'Project Version is awesome!';
-
-        $this->subject->setVersion($newValue);
-
-        static::assertAttributeSame($newValue, 'version', $this->subject);
+        static::assertSame(
+            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown',
+            $this->subject->getVersion()
+        );
     }
 
     /**
      * @test
      */
-    public function getIconIdentifierShouldReturnInitialValue()
+    public function setVersionShouldSetPropertyVersion(): void
+    {
+        $newValue = 'Project Version is awesome!';
+
+        $this->subject->setVersion($newValue);
+
+        static::assertSame(
+            $newValue,
+            $this->subject->getVersion()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getIconIdentifierShouldReturnInitialValue(): void
     {
         static::assertSame('information-project-version', $this->subject->getIconIdentifier());
     }
@@ -91,12 +97,15 @@ class ProjectVersionTest extends UnitTestCase
     /**
      * @test
      */
-    public function setIconIdentifierShouldSetPropertyIconIdentifier()
+    public function setIconIdentifierShouldSetPropertyIconIdentifier(): void
     {
         $newValue = 'Project Version is awesome!';
 
         $this->subject->setIconIdentifier($newValue);
 
-        static::assertAttributeSame($newValue, 'iconIdentifier', $this->subject);
+        static::assertSame(
+            $newValue,
+            $this->subject->getIconIdentifier()
+        );
     }
 }

@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  KamiYang\ProjectVersion\:
+    resource: '../Classes/*'
+
+  KamiYang\ProjectVersion\EventListener\ProjectVersionEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'kamiyang-project-version'
+        event: TYPO3\CMS\Backend\Backend\Event\SystemInformationToolbarCollectorEvent

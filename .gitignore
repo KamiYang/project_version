@@ -1,3 +1,4 @@
+/.ddev
 /.Build/
 /.idea/
 /composer.lock

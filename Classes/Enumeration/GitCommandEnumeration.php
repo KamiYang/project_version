@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Enumeration;
+declare(strict_types=1);
 
 /*
  * This file is part of the ProjectVersion project.
@@ -15,18 +14,20 @@ namespace KamiYang\ProjectVersion\Enumeration;
  * LICENSE file that was distributed with this source code.
  */
 
+namespace KamiYang\ProjectVersion\Enumeration;
+
 /**
  * Class GitCommandEnumeration
  */
 final class GitCommandEnumeration
 {
-    const CMD_BRANCH = 'git rev-parse --abbrev-ref HEAD';
-    const CMD_REVISION = 'git rev-parse --short HEAD';
-    const CMD_TAG = 'git describe --tags';
+    public const CMD_BRANCH = 'git rev-parse --abbrev-ref HEAD';
+    public const CMD_REVISION = 'git rev-parse --short HEAD';
+    public const CMD_TAG = 'git describe --tags';
 
-    const FORMAT_REVISION = '0';
-    const FORMAT_REVISION_BRANCH = '1';
-    const FORMAT_REVISION_TAG = '2';
-    const FORMAT_BRANCH = '3';
-    const FORMAT_TAG = '4';
+    public const FORMAT_REVISION = '0';
+    public const FORMAT_REVISION_BRANCH = '1';
+    public const FORMAT_REVISION_TAG = '2';
+    public const FORMAT_BRANCH = '3';
+    public const FORMAT_TAG = '4';
 }

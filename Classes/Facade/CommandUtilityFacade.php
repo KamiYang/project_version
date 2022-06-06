@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Facade;
+declare(strict_types=1);
 
 /*
  * This file is part of the ProjectVersion project.
@@ -14,6 +13,8 @@ namespace KamiYang\ProjectVersion\Facade;
  * For the full copyright and license information, please read
  * LICENSE file that was distributed with this source code.
  */
+
+namespace KamiYang\ProjectVersion\Facade;
 
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
