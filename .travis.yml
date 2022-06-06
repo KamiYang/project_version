@@ -61,21 +61,27 @@ jobs:
     - *test
       env: TYPO3_VERSION=10.5.28
     - *test
-      env: TYPO3_VERSION=11.3.3
+      env: TYPO3_VERSION=11.5.0
     - *test
-      env: TYPO3_VERSION=11.3.4
+      env: TYPO3_VERSION=11.5.1
     - *test
-      env: TYPO3_VERSION=11.3.5
+      env: TYPO3_VERSION=11.5.2
     - *test
-      env: TYPO3_VERSION=11.3.6
+      env: TYPO3_VERSION=11.5.3
     - *test
-      env: TYPO3_VERSION=11.3.7
+      env: TYPO3_VERSION=11.5.4
     - *test
-      env: TYPO3_VERSION=11.3.8
+      env: TYPO3_VERSION=11.5.5
     - *test
-      env: TYPO3_VERSION=11.3.9
+      env: TYPO3_VERSION=11.5.6
     - *test
-      env: TYPO3_VERSION=11.3.10
+      env: TYPO3_VERSION=11.5.7
+    - *test
+      env: TYPO3_VERSION=11.5.8
+    - *test
+      env: TYPO3_VERSION=11.5.9
+    - *test
+      env: TYPO3_VERSION=11.5.10
     - stage: test
       php: 7.2
       env: TYPO3_VERSION=dev-master
