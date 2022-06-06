@@ -38,11 +38,11 @@ class ProjectVersionService implements SingletonInterface
     /**
      * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
      */
-    protected CommandUtilityFacade $commandUtilityFacade;
+    protected $commandUtilityFacade;
     /**
      * @var \KamiYang\ProjectVersion\Configuration\ExtensionConfiguration
      */
-    private ExtensionConfiguration $extensionConfiguration;
+    private $extensionConfiguration;
 
     public function __construct(CommandUtilityFacade $commandUtilityFacade, ExtensionConfiguration $extensionConfiguration)
     {
