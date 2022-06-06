@@ -60,7 +60,7 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.typo3_version }}-
 
       - name: Install dependencies for TYPO3 version "${{ matrix.typo3_version }}"
-        run: >-
+        run: |-
           composer require
             typo3/cms-backend:${{ matrix.typo3_version }}
             typo3/cms-core:${{ matrix.typo3_version }}
