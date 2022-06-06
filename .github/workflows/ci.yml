@@ -13,7 +13,7 @@ jobs:
       matrix:
         typo3_version:
           - 10.4.20
-          - 10.4.21
+#          - 10.4.21
 #          - 10.4.22
 #          - 10.4.23
 #          - 10.4.24
@@ -60,41 +60,7 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.typo3_version }}-
 
       - name: Install dependencies for TYPO3 version "${{ matrix.typo3_version }}"
-        run: |-
-          composer require
-            typo3/cms-backend:${{ matrix.typo3_version }}
-            typo3/cms-core:${{ matrix.typo3_version }}
-            typo3/cms-extbase:${{ matrix.typo3_version }}
-            typo3/cms-extensionmanager:${{ matrix.typo3_version }}
-            typo3/cms-filelist:${{ matrix.typo3_version }}
-            typo3/cms-fluid:${{ matrix.typo3_version }}
-            typo3/cms-frontend:${{ matrix.typo3_version }}
-            typo3/cms-install:${{ matrix.typo3_version }}
-            typo3/cms-recordlist:${{ matrix.typo3_version }}
-            typo3/cms-lowlevel:${{ matrix.typo3_version }}
-            typo3/cms-about:${{ matrix.typo3_version }}
-            typo3/cms-belog:${{ matrix.typo3_version }}
-            typo3/cms-beuser:${{ matrix.typo3_version }}
-            typo3/cms-felogin:${{ matrix.typo3_version }}
-            typo3/cms-fluid-styled-content:${{ matrix.typo3_version }}
-            typo3/cms-form:${{ matrix.typo3_version }}
-            typo3/cms-impexp:${{ matrix.typo3_version }}
-            typo3/cms-info:${{ matrix.typo3_version }}
-            typo3/cms-rte-ckeditor:${{ matrix.typo3_version }}
-            typo3/cms-setup:${{ matrix.typo3_version }}
-            typo3/cms-seo:${{ matrix.typo3_version }}
-            typo3/cms-sys-note:${{ matrix.typo3_version }}
-            typo3/cms-t3editor:${{ matrix.typo3_version }}
-            typo3/cms-tstemplate:${{ matrix.typo3_version }}
-            typo3/cms-viewpage:${{ matrix.typo3_version }}
-            typo3/cms-adminpanel:${{ matrix.typo3_version }}
-            typo3/cms-redirects:${{ matrix.typo3_version }}
-            typo3/cms-workspaces:${{ matrix.typo3_version }}
-            typo3/cms-reports:${{ matrix.typo3_version }}
-            typo3/cms-scheduler:${{ matrix.typo3_version }}
-            typo3/cms-recycler:${{ matrix.typo3_version }}
-            typo3/cms-opendocs:${{ matrix.typo3_version }}
-            typo3/cms-linkvalidator:${{ matrix.typo3_version }}
+        run: composer require typo3/cms-backend:${{ matrix.typo3_version }} typo3/cms-core:${{ matrix.typo3_version }} typo3/cms-extbase:${{ matrix.typo3_version }} typo3/cms-extensionmanager:${{ matrix.typo3_version }} typo3/cms-filelist:${{ matrix.typo3_version }} typo3/cms-fluid:${{ matrix.typo3_version }} typo3/cms-frontend:${{ matrix.typo3_version }} typo3/cms-install:${{ matrix.typo3_version }} typo3/cms-recordlist:${{ matrix.typo3_version }} typo3/cms-lowlevel:${{ matrix.typo3_version }} typo3/cms-about:${{ matrix.typo3_version }} typo3/cms-belog:${{ matrix.typo3_version }} typo3/cms-beuser:${{ matrix.typo3_version }} typo3/cms-felogin:${{ matrix.typo3_version }} typo3/cms-fluid-styled-content:${{ matrix.typo3_version }} typo3/cms-form:${{ matrix.typo3_version }} typo3/cms-impexp:${{ matrix.typo3_version }} typo3/cms-info:${{ matrix.typo3_version }} typo3/cms-rte-ckeditor:${{ matrix.typo3_version }} typo3/cms-setup:${{ matrix.typo3_version }} typo3/cms-seo:${{ matrix.typo3_version }} typo3/cms-sys-note:${{ matrix.typo3_version }} typo3/cms-t3editor:${{ matrix.typo3_version }} typo3/cms-tstemplate:${{ matrix.typo3_version }} typo3/cms-viewpage:${{ matrix.typo3_version }} typo3/cms-adminpanel:${{ matrix.typo3_version }} typo3/cms-redirects:${{ matrix.typo3_version }} typo3/cms-workspaces:${{ matrix.typo3_version }} typo3/cms-reports:${{ matrix.typo3_version }} typo3/cms-scheduler:${{ matrix.typo3_version }} typo3/cms-recycler:${{ matrix.typo3_version }} typo3/cms-opendocs:${{ matrix.typo3_version }} typo3/cms-linkvalidator:${{ matrix.typo3_version }}
 
       - name: Unit tests
         run: .Build/bin/phpunit --colors -c phpunit.xml
