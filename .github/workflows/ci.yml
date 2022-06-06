@@ -36,11 +36,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up PHP Version
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 7.2
           tools: composer:v1
+          coverage: xdebug
 
       - name: Validate composer.json
         run: composer validate --strict
