@@ -42,9 +42,7 @@ final class ProjectVersionEventListener
     public function __invoke(SystemInformationToolbarCollectorEvent $event)
     {
         $projectVersion = $this->projectVersionService->getProjectVersion();
-
         $version = $projectVersion->getVersion();
-
         if (StringUtility::beginsWith($version, 'LLL:')) {
             $version = $this->languageService->sL($version);
         }

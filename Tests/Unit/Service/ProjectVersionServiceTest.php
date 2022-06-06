@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use function array_replace;
 use function ini_get;
 use function ini_set;
-use function var_dump;
 
 /**
  * Class ProjectVersionServiceTest
@@ -153,7 +152,8 @@ class ProjectVersionServiceTest extends UnitTestCase
             'mode' => ProjectVersionModeEnumeration::GIT,
             'gitFormat' => $format
         ]);
-        $this->commandUtilityFacadeProphecy->exec('git --version', Argument::cetera())
+        $returnValue = 0;
+        $this->commandUtilityFacadeProphecy->exec('git --version', $_, $returnValue)
             ->will(function (&$arguments) {
                 $arguments[2] = 0;
             });
@@ -161,10 +161,14 @@ class ProjectVersionServiceTest extends UnitTestCase
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_REVISION)->willReturn($revision);
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->willReturn($tag);
 
-        $subject = new ProjectVersionService(
-            $this->commandUtilityFacadeProphecy->reveal(),
-            new ExtensionConfiguration()
-        );
+        $subject = $this->createPartialMock(ProjectVersionService::class, ['isGitAvailable']);
+        $dependency = new ExtensionConfiguration();
+        $this->inject($subject, 'extensionConfiguration', $dependency);
+        $this->inject($subject, 'commandUtilityFacade', $this->commandUtilityFacadeProphecy->reveal());
+        $subject
+            ->expects(self::once())
+            ->method('isGitAvailable')
+            ->willReturn(true);
 
         static::assertSame(
             $expected,
@@ -207,7 +211,7 @@ class ProjectVersionServiceTest extends UnitTestCase
     }
 
     /**
-     * @return array
+     * @return Generator
      */
     public function gitFormatDataProvider(): Generator
     {

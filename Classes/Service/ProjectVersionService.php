@@ -42,7 +42,7 @@ class ProjectVersionService implements SingletonInterface
     /**
      * @var \KamiYang\ProjectVersion\Configuration\ExtensionConfiguration
      */
-    private $extensionConfiguration;
+    protected $extensionConfiguration;
 
     public function __construct(CommandUtilityFacade $commandUtilityFacade, ExtensionConfiguration $extensionConfiguration)
     {
@@ -103,7 +103,7 @@ class ProjectVersionService implements SingletonInterface
         return $format;
     }
 
-    private function isGitAvailable(): bool
+    protected function isGitAvailable(): bool
     {
         return $this->isExecEnabled() &&
             // check if git exists
