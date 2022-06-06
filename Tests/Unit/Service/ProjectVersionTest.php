@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Tests\Unit\Service;
-
 /*
  * This file is part of the ProjectVersion project.
  *
@@ -15,6 +13,8 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
  * For the full copyright and license information, please read
  * LICENSE file that was distributed with this source code.
  */
+
+namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;

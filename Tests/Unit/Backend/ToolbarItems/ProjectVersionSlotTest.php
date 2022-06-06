@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
-
 /*
  * This file is part of the ProjectVersion project.
  *
@@ -15,6 +13,8 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
  * For the full copyright and license information, please read
  * LICENSE file that was distributed with this source code.
  */
+
+namespace KamiYang\ProjectVersion\Tests\Unit\Backend\ToolbarItems;
 
 use KamiYang\ProjectVersion\Backend\ToolbarItems\ProjectVersionSlot;
 use KamiYang\ProjectVersion\Facade\LocalizationUtilityFacade;

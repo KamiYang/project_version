@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Service;
-
 /*
  * This file is part of the ProjectVersion project.
  *
@@ -15,6 +13,8 @@ namespace KamiYang\ProjectVersion\Service;
  * For the full copyright and license information, please read
  * LICENSE file that was distributed with this source code.
  */
+
+namespace KamiYang\ProjectVersion\Service;
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
 use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
@@ -38,11 +38,11 @@ class ProjectVersionService implements SingletonInterface
     /**
      * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
      */
-    protected $commandUtilityFacade;
+    protected CommandUtilityFacade $commandUtilityFacade;
     /**
      * @var \KamiYang\ProjectVersion\Configuration\ExtensionConfiguration
      */
-    private $extensionConfiguration;
+    private ExtensionConfiguration $extensionConfiguration;
 
     public function __construct(CommandUtilityFacade $commandUtilityFacade, ExtensionConfiguration $extensionConfiguration)
     {
