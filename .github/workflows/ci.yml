@@ -7,8 +7,8 @@ on:
 
 jobs:
   test:
+    name: 'Run unit tests on TYPO3 version: '${{ matrix.typo3_version }}
     runs-on: ubuntu-18.04
-    needs: build
     strategy:
       matrix:
         typo3_version:
