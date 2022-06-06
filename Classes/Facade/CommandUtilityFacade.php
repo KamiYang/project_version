@@ -18,9 +18,6 @@ namespace KamiYang\ProjectVersion\Facade;
 
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
-/**
- * Class CommandUtilityFacade
- */
 class CommandUtilityFacade
 {
     /**

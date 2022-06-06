@@ -30,15 +30,13 @@ use function ini_get;
 use function sprintf;
 use function trim;
 
-/**
- * Class ProjectVersionService
- */
 class ProjectVersionService implements SingletonInterface
 {
     /**
      * @var CommandUtilityFacade
      */
     protected $commandUtilityFacade;
+
     /**
      * @var ExtensionConfiguration
      */
@@ -80,7 +78,6 @@ class ProjectVersionService implements SingletonInterface
 
     /**
      * @internal protected so we can mock it in unit tests.
-     * @return bool
      */
     protected function isGitAvailable(): bool
     {
@@ -129,12 +126,12 @@ class ProjectVersionService implements SingletonInterface
 
     private function setVersionFromGit(ProjectVersion $projectVersion): void
     {
-        if (!$this->isGitAvailable()) {
+        if (! $this->isGitAvailable()) {
             return;
         }
 
         $version = $this->getVersionByFormat();
-        if (!empty($version)) {
+        if (! empty($version)) {
             $gitIconIdentifier = 'information-git';
 
             $projectVersion->setVersion($version);
@@ -158,6 +155,6 @@ class ProjectVersionService implements SingletonInterface
 
     private function isExecEnabled(): bool
     {
-        return !in_array('exec', GeneralUtility::trimExplode(',', ini_get('disable_functions')), true);
+        return ! in_array('exec', GeneralUtility::trimExplode(',', ini_get('disable_functions')), true);
     }
 }

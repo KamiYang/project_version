@@ -21,9 +21,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
-/**
- * Class ExtensionConfiguration
- */
 final class ExtensionConfiguration implements SingletonInterface
 {
     private const DEFAULT_VERSION_FILE = 'VERSION';
@@ -60,10 +57,17 @@ final class ExtensionConfiguration implements SingletonInterface
      */
     private $staticVersion;
 
+    public function __construct()
+    {
+        $this->configuration = $this->getExtensionConfigurationFromGlobals();
+        $this->versionFilePath = $this->resolveVersionFilePath();
+        $this->mode = $this->configuration['mode'] ?? ProjectVersionModeEnumeration::FILE;
+        $this->gitFormat = $this->configuration['gitFormat'] ?? '';
+        $this->staticVersion = $this->configuration['staticVersion'] ?? '';
+    }
+
     /**
      * Fetch absolute version filename.
-     *
-     * @return string
      */
     public function getAbsVersionFilePath(): string
     {
@@ -88,15 +92,6 @@ final class ExtensionConfiguration implements SingletonInterface
     public function getStaticVersion(): string
     {
         return $this->staticVersion;
-    }
-
-    public function __construct()
-    {
-        $this->configuration = $this->getExtensionConfigurationFromGlobals();
-        $this->versionFilePath = $this->resolveVersionFilePath();
-        $this->mode = $this->configuration['mode'] ?? ProjectVersionModeEnumeration::FILE;
-        $this->gitFormat = $this->configuration['gitFormat'] ?? '';
-        $this->staticVersion = $this->configuration['staticVersion'] ?? '';
     }
 
     private function getExtensionConfigurationFromGlobals(): array
