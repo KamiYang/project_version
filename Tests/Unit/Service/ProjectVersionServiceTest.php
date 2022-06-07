@@ -31,9 +31,6 @@ use function array_replace;
 use function ini_get;
 use function ini_set;
 
-/**
- * Class ProjectVersionServiceTest
- */
 class ProjectVersionServiceTest extends UnitTestCase
 {
     /**
@@ -45,7 +42,7 @@ class ProjectVersionServiceTest extends UnitTestCase
         'gitFormat' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
         'mode' => ProjectVersionModeEnumeration::FILE,
         'staticVersion' => '',
-        'versionFilePath' => 'VERSION'
+        'versionFilePath' => 'VERSION',
     ];
 
     /**
@@ -53,13 +50,22 @@ class ProjectVersionServiceTest extends UnitTestCase
      */
     private $commandUtilityFacadeProphecy;
 
-    /**
-     * @test
-     */
-    public function getProjectVersionShouldNotSetProjectVersionIfVersionFileIsNotFound(): void
+    protected function setUp(): void
+    {
+        $this->commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
+    }
+
+    protected function tearDown(): void
+    {
+        GeneralUtility::purgeInstances();
+
+        parent::tearDown();
+    }
+
+    public function testGetProjectVersionShouldNotSetProjectVersionIfVersionFileIsNotFound(): void
     {
         $this->setUpExtensionConfiguration([
-            'versionFilePath' => '/some/not/existing/path'
+            'versionFilePath' => '/some/not/existing/path',
         ]);
 
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
@@ -71,13 +77,13 @@ class ProjectVersionServiceTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @param string $versionFilePath
      * @dataProvider versionFilePathDataProvider
      */
-    public function getProjectVersionShouldSetVersionFromVersionFileIfFileExists(string $versionFilePath): void
+    public function testGetProjectVersionShouldSetVersionFromVersionFileIfFileExists(string $versionFilePath): void
     {
-        $this->setUpExtensionConfiguration(['versionFilePath' => $versionFilePath]);
+        $this->setUpExtensionConfiguration([
+            'versionFilePath' => $versionFilePath,
+        ]);
 
         $subject = $this->getSubject();
 
@@ -90,22 +96,21 @@ class ProjectVersionServiceTest extends UnitTestCase
     public function versionFilePathDataProvider(): Generator
     {
         yield 'version file with EXT shortcut' => [
-            'EXT:project_version/Tests/Fixture/VERSION'
+            'EXT:project_version/Tests/Fixture/VERSION',
         ];
         yield 'directory with EXT shortcut' => [
-            'EXT:project_version/Tests/Fixture/'
+            'EXT:project_version/Tests/Fixture/',
         ];
         yield 'Version file with EXT shortcut and different filename' => [
-            'EXT:project_version/Tests/Fixture/VersionFileWithDifferentName'
+            'EXT:project_version/Tests/Fixture/VersionFileWithDifferentName',
         ];
     }
 
-    /**
-     * @test
-     */
-    public function getProjectVersionShouldNotSetVersionFromGitIfCommandExecIsNotAvailable(): void
+    public function testGetProjectVersionShouldNotSetVersionFromGitIfCommandExecIsNotAvailable(): void
     {
-        $this->setUpExtensionConfiguration(['mode' => ProjectVersionModeEnumeration::GIT]);
+        $this->setUpExtensionConfiguration([
+            'mode' => ProjectVersionModeEnumeration::GIT,
+        ]);
 
         $projectVersionProphecy = $this->prophesize(ProjectVersion::class);
         GeneralUtility::setSingletonInstance(ProjectVersion::class, $projectVersionProphecy->reveal());
@@ -122,17 +127,9 @@ class ProjectVersionServiceTest extends UnitTestCase
     }
 
     /**
-     * @test
-     *
-     * @param string $format
-     * @param string $branch
-     * @param string $revision
-     * @param string $tag
-     * @param string $expected
-     *
      * @dataProvider gitFormatDataProvider
      */
-    public function getProjectVersionShouldReturnSpecifiedVersionBasedOnConfiguredGitFormat(
+    public function testGetProjectVersionShouldReturnSpecifiedVersionBasedOnConfiguredGitFormat(
         string $format,
         string $branch,
         string $revision,
@@ -141,7 +138,7 @@ class ProjectVersionServiceTest extends UnitTestCase
     ): void {
         $this->setUpExtensionConfiguration([
             'mode' => ProjectVersionModeEnumeration::GIT,
-            'gitFormat' => $format
+            'gitFormat' => $format,
         ]);
         $returnValue = 0;
         $this->commandUtilityFacadeProphecy->exec('git --version', $_, $returnValue)
@@ -170,16 +167,13 @@ class ProjectVersionServiceTest extends UnitTestCase
         $this->commandUtilityFacadeProphecy->exec(GitCommandEnumeration::CMD_TAG)->shouldHaveBeenCalledTimes(1);
     }
 
-    /**
-     * @test
-     */
-    public function getProjectVersionShouldTryToFetchVersionFromFileIfResolvingUsingGitErrored(): void
+    public function testGetProjectVersionShouldTryToFetchVersionFromFileIfResolvingUsingGitErrored(): void
     {
         $versionFilePath = 'EXT:project_version/Tests/Fixture/VERSION';
         $this->setUpExtensionConfiguration([
             'versionFilePath' => $versionFilePath,
             'mode' => ProjectVersionModeEnumeration::GIT_FILE_FALLBACK,
-            'gitFormat' => GitCommandEnumeration::FORMAT_REVISION_BRANCH
+            'gitFormat' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
         ]);
         $branch = '';
         $revision = '';
@@ -197,9 +191,6 @@ class ProjectVersionServiceTest extends UnitTestCase
         static::assertSame($expected, $subject->getProjectVersion()->getVersion());
     }
 
-    /**
-     * @return Generator
-     */
     public function gitFormatDataProvider(): Generator
     {
         $branch = 'master';
@@ -211,51 +202,50 @@ class ProjectVersionServiceTest extends UnitTestCase
             'branch' => $branch,
             'revision' => $revision,
             'tag' => $tag,
-            'expected' => "[{$revision}] {$branch}"
+            'expected' => "[{$revision}] {$branch}",
         ];
         yield 'git format: revision' => [
             'format' => GitCommandEnumeration::FORMAT_REVISION,
             'branch' => $branch,
             'revision' => $revision,
             'tag' => $tag,
-            'expected' => "{$revision}"
+            'expected' => "{$revision}",
         ];
         yield 'git format: [revision] branch' => [
             'format' => GitCommandEnumeration::FORMAT_REVISION_BRANCH,
             'branch' => $branch,
             'revision' => $revision,
             'tag' => $tag,
-            'expected' => "[{$revision}] {$branch}"
+            'expected' => "[{$revision}] {$branch}",
         ];
         yield 'git format: [revision] tag' => [
             'format' => GitCommandEnumeration::FORMAT_REVISION_TAG,
             'branch' => $branch,
             'revision' => $revision,
             'tag' => $tag,
-            'expected' => "[{$revision}] {$tag}"
+            'expected' => "[{$revision}] {$tag}",
         ];
         yield 'git format: branch' => [
             'format' => GitCommandEnumeration::FORMAT_BRANCH,
             'branch' => $branch,
             'revision' => $revision,
             'tag' => $tag,
-            'expected' => "{$branch}"
+            'expected' => "{$branch}",
         ];
         yield 'git format: tag' => [
             'format' => GitCommandEnumeration::FORMAT_TAG,
             'branch' => $branch,
             'revision' => $revision,
             'tag' => $tag,
-            'expected' => "{$tag}"
+            'expected' => "{$tag}",
         ];
     }
 
-    /**
-     * @test
-     */
-    public function getProjectVersionShouldAlwaysSetStaticVersionIfSelected(): void
+    public function testGetProjectVersionShouldAlwaysSetStaticVersionIfSelected(): void
     {
-        $this->setUpExtensionConfiguration(['mode' => ProjectVersionModeEnumeration::STATIC_VERSION]);
+        $this->setUpExtensionConfiguration([
+            'mode' => ProjectVersionModeEnumeration::STATIC_VERSION,
+        ]);
 
         $subject = $this->getSubject();
 
@@ -266,16 +256,14 @@ class ProjectVersionServiceTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @param string $staticVersion
      * @dataProvider staticVersionDataProvider
      */
-    public function getProjectVersionShouldSetStaticVersionFromExtensionConfigurationIfSelected(
+    public function testGetProjectVersionShouldSetStaticVersionFromExtensionConfigurationIfSelected(
         string $staticVersion
     ): void {
         $this->setUpExtensionConfiguration([
             'mode' => ProjectVersionModeEnumeration::STATIC_VERSION,
-            'staticVersion' => $staticVersion
+            'staticVersion' => $staticVersion,
         ]);
 
         $subject = $this->getSubject();
@@ -289,26 +277,14 @@ class ProjectVersionServiceTest extends UnitTestCase
     public function staticVersionDataProvider(): Generator
     {
         yield 'empty static version (default value)' => [
-            'staticVersion' => ''
+            'staticVersion' => '',
         ];
         yield 'some value' => [
-            'staticVersion' => 'some value'
+            'staticVersion' => 'some value',
         ];
         yield 'some extreme long value' => [
-            'staticVersion' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos hic ipsa labore molestiae nesciunt quo repellendus similique tenetur vitae voluptatem! Dicta dolor minus nostrum ratione voluptas? Ad animi iste sunt!'
+            'staticVersion' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos hic ipsa labore molestiae nesciunt quo repellendus similique tenetur vitae voluptatem! Dicta dolor minus nostrum ratione voluptas? Ad animi iste sunt!',
         ];
-    }
-
-    protected function setUp(): void
-    {
-        $this->commandUtilityFacadeProphecy = $this->prophesize(CommandUtilityFacade::class);
-    }
-
-    protected function tearDown(): void
-    {
-        GeneralUtility::purgeInstances();
-
-        parent::tearDown();
     }
 
     protected function setUpExtensionConfiguration(array $extConfig): void

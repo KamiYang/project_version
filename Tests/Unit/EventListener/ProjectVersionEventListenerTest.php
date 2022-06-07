@@ -25,9 +25,6 @@ use TYPO3\CMS\Backend\Backend\ToolbarItems\SystemInformationToolbarItem;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * Class ProjectVersionSlotTest
- */
 class ProjectVersionEventListenerTest extends UnitTestCase
 {
     /**
@@ -47,10 +44,7 @@ class ProjectVersionEventListenerTest extends UnitTestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
-    public function getProjectVersionShouldAddProjectVersionAsSystemInformation(): void
+    public function testGetProjectVersionShouldAddProjectVersionAsSystemInformation(): void
     {
         $version = '9000-rc.69';
         $title = 'Project Version';
@@ -69,10 +63,7 @@ class ProjectVersionEventListenerTest extends UnitTestCase
             ->shouldHaveBeenCalledTimes(1);
     }
 
-    /**
-     * @test
-     */
-    public function getProjectVersionShouldResolveCurrentVersionAndLocalizeItIfNecessary(): void
+    public function testGetProjectVersionShouldResolveCurrentVersionAndLocalizeItIfNecessary(): void
     {
         $initialVersionValue = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
         $projectVersion = new ProjectVersion();

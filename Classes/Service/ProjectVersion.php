@@ -20,21 +20,19 @@ use TYPO3\CMS\Core\SingletonInterface;
 
 use function trim;
 
-/**
- * Class ProjectVersion
- */
 class ProjectVersion implements SingletonInterface
 {
     public const UNKNOWN_VERSION = self::LLL . ':toolbarItems.sysinfo.project-version.unknown';
+
     private const LLL = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf';
 
     /**
-     * @var string $title
+     * @var string
      */
     protected $title = self::LLL . ':toolbarItems.sysinfo.project-version';
 
     /**
-     * @var string $version
+     * @var string
      */
     protected $version = self::UNKNOWN_VERSION;
 
@@ -43,49 +41,31 @@ class ProjectVersion implements SingletonInterface
      */
     protected $iconIdentifier = 'information-project-version';
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
     public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
     public function setVersion(string $version): void
     {
         $this->version = trim($version);
     }
 
-    /**
-     * @return string
-     */
     public function getIconIdentifier(): string
     {
         return $this->iconIdentifier;
     }
 
-    /**
-     * @param string $iconIdentifier
-     */
     public function setIconIdentifier(string $iconIdentifier): void
     {
         $this->iconIdentifier = $iconIdentifier;

@@ -19,9 +19,6 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class ProjectVersionTest
- */
 class ProjectVersionTest extends UnitTestCase
 {
     /**
@@ -34,10 +31,7 @@ class ProjectVersionTest extends UnitTestCase
         $this->subject = new ProjectVersion();
     }
 
-    /**
-     * @test
-     */
-    public function getTitleShouldReturnInitialValue(): void
+    public function testGetTitleShouldReturnInitialValue(): void
     {
         static::assertSame(
             'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version',
@@ -45,10 +39,7 @@ class ProjectVersionTest extends UnitTestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function setTitleShouldSetPropertyTitle(): void
+    public function testSetTitleShouldSetPropertyTitle(): void
     {
         $newValue = 'Project Version is awesome!';
 
@@ -60,10 +51,7 @@ class ProjectVersionTest extends UnitTestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function initialVersionValueShouldBeLLLString(): void
+    public function testInitialVersionValueShouldBeLLLString(): void
     {
         static::assertSame(
             'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown',
@@ -71,10 +59,7 @@ class ProjectVersionTest extends UnitTestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function setVersionShouldSetPropertyVersion(): void
+    public function testSetVersionShouldSetPropertyVersion(): void
     {
         $newValue = 'Project Version is awesome!';
 
@@ -86,18 +71,12 @@ class ProjectVersionTest extends UnitTestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function getIconIdentifierShouldReturnInitialValue(): void
+    public function testGetIconIdentifierShouldReturnInitialValue(): void
     {
         static::assertSame('information-project-version', $this->subject->getIconIdentifier());
     }
 
-    /**
-     * @test
-     */
-    public function setIconIdentifierShouldSetPropertyIconIdentifier(): void
+    public function testSetIconIdentifierShouldSetPropertyIconIdentifier(): void
     {
         $newValue = 'Project Version is awesome!';
 
