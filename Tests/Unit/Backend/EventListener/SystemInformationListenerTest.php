@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace KamiYang\ProjectVersion\Tests\Unit\Backend\EventListener;
-
 /*
  * This file is part of the ProjectVersion project.
  *
@@ -15,6 +13,8 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Backend\EventListener;
  * For the full copyright and license information, please read
  * LICENSE file that was distributed with this source code.
  */
+
+namespace KamiYang\ProjectVersion\Tests\Unit\Backend\EventListener;
 
 use KamiYang\ProjectVersion\Backend\EventListener\SystemInformationListener;
 use KamiYang\ProjectVersion\Service\ProjectVersion;
