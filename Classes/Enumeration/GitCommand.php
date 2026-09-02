@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Enumeration;
@@ -16,12 +17,12 @@ namespace KamiYang\ProjectVersion\Enumeration;
  */
 
 /**
- * Class ProjectVersionModeEnumeration
+ * Shell commands used to resolve the git based project version.
  */
-final class ProjectVersionModeEnumeration
+enum GitCommand: string
 {
-    const FILE = '0';
-    const GIT = '1';
-    const GIT_FILE_FALLBACK = '2';
-    const STATIC_VERSION = '3';
+    case Branch = 'git rev-parse --abbrev-ref HEAD';
+    case Revision = 'git rev-parse --short HEAD';
+    case Tag = 'git describe --tags';
+    case Version = 'git --version';
 }

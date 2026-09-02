@@ -1,107 +1,129 @@
 # Project Version (EXT:project_version)
 
-[![StyleCI](https://github.styleci.io/repos/134700322/shield?branch=master)](https://github.styleci.io/repos/134700322)
-[![Build Status](https://travis-ci.org/KamiYang/project_version.svg?branch=master)](https://travis-ci.org/KamiYang/project_version)
-[![Coverage Status](https://coveralls.io/repos/github/KamiYang/project_version/badge.svg?branch=master)](https://coveralls.io/github/KamiYang/project_version?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/KamiYang/project_version/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/KamiYang/project_version/?branch=master)
+[![CI](https://github.com/KamiYang/project_version/actions/workflows/ci.yml/badge.svg)](https://github.com/KamiYang/project_version/actions/workflows/ci.yml)
 
 ## What is project version?
-Project version is a TYPO3  extension that adds an entry to the TYPO3 system information in the toolbar. This entry is based either on the common 'VERSION' file or on the local GIT revision.
 
-## How do I install it? 
-First make sure you match the requirements:
+Project version is a TYPO3 extension that adds an entry to the TYPO3 "System Information" dropdown in the
+backend toolbar. The entry shows the version of *your project* (not TYPO3's), taken either from a plain
+`VERSION` file, from the local git checkout or from a statically configured value.
 
-| Requirement | Version |
-| --- | --- |
-| TYPO3 | \>=8.7 <9.6 |
-| php | \>= 7.0 |
+## Requirements
 
-### Composer
-Simply require the extension from packagist: 
-`composer require kamiyang/ext-projectversion`
+| project_version | TYPO3            | PHP     |
+| --------------- | ---------------- | ------- |
+| 2.x             | 13.4, 14, 15     | >= 8.2 (TYPO3 15 requires PHP 8.5) |
+| 1.x             | 8.7, 9.5         | >= 7.0  |
 
-Or if you prefer typo3-ter:
-`composer require typo3-ter/projectversion`
+TYPO3 v15 support is based on the current development branch (`15.0.x-dev`) and will be re-validated once
+15.0 is released.
 
-### TER
-No composer available? No problem! You also can find this extension at TYPO3's Extension Repository (TER).
-You can straight download it from inside your TYPO3 as long, as your TYPO3 is not in composer mode. 
+## Installation
 
-## How do I use it?
-### "VERSION"-file
-Now, this is the easiest part. Create a file called `VERSION` (case sensitive) in your TYPO3 frontend docroot with the project version. This can be done like this: 
-`$ echo 1.0.0-rc.3 > /var/www/html/VERSION`
+```bash
+composer require kamiyang/ext-projectversion
+```
 
-### Custom Path
-You can use your own filename and path. Note that this path still has to be accessible from your web docroot.
-The configuration can be done in the ExtensionConfiguration. It is also possible to change the directory of the 'VERSION'-file. Only provide a directory path (with trailing slash '/') and it will automatically search for an file called 'VERSION'.
+Or, in a classic (non-composer) installation, install "Project Version" from the TYPO3 Extension Repository (TER).
 
-Examples:
-We assume that the web document root (`PATH_site`) is `/var/www/html`.
+No further setup is required. The extension registers a PSR-14 event listener for
+`SystemInformationToolbarCollectorEvent` and an icon; there is no TypoScript and no database table.
 
-| Configured Path | Absolute filename | 
-| --- | --- |
-| (empty - default) | /var/www/html/VERSION |
-| MyVersion | /var/www/html/MyVersion |
-| typo3conf/ | /var/www/html/typo3conf/VERSION |
-| ./My/Custom/Version/File/In/Some/Nested/File/Structure | /var/www/html/./My/Custom/Version/File/In/Some/Nested/File/Structure|
+## Usage
 
-### GIT
-Since release 0.3.0 git is supported. This must be manually activated. In order to use git, make sure it's available!
-Common case is that the local development environment is based on docker images. Many docker images do not have git out of the box available.
-To activate it, simply move via your preferred web browser into the TYPO3 backend. For TYPO3 v8.7 - go to "Extensions > Project Version" and configure the extension.
-The configuration screen will look like this on default: 
+### VERSION file (default)
 
-![default extension configuration](Documentation/Images/DefaultConfig.png)
+Create a file called `VERSION` (case sensitive) containing the project version:
 
-This has changed a bit in TYPO3 v9. To configure the extension go to "Settings > Configure extensions" and filter for "project version".
-The new configuration screen will look like this:
+```bash
+echo "1.0.0-rc.3" > VERSION
+```
 
-![new default extension configuration screen](Documentation/Images/DefaultConfigTYPO3v9.png)
+Relative paths are looked up in this order:
 
-#### Configuration possibilities
+1. the public web directory (`public/` in composer mode, the document root otherwise)
+2. the project directory (the composer root in composer mode)
 
-##### basic.mode
+So both `/var/www/html/public/VERSION` and `/var/www/html/VERSION` work out of the box.
 
-| Configuration | Description |
-| --- | --- |
-| VERSION File (default)| Fetches the current project version based on the path configured in `basic.versionFilePath` |
-| GIT | Uses GIT if available to resolve the project version in the format configured in `basic.gitFormat` |
-| GIT (VERSION file as fallback) | Will use GIT as preferred resolving method. If not available will fallback to VERSION file. |
+### Custom path
 
+The file name and location can be changed in the extension settings
+(*Admin Tools > Settings > Extension Configuration > project_version*, setting `versionFilePath`).
 
-##### basic.gitFormat
+| Configured path                          | Resolved to                                                        |
+| ---------------------------------------- | ------------------------------------------------------------------ |
+| *(empty, default)*                       | `<public>/VERSION`, then `<project>/VERSION`                       |
+| `MyVersion`                              | `<public>/MyVersion`, then `<project>/MyVersion`                   |
+| `config/`                                | `<public>/config/VERSION`, then `<project>/config/VERSION`         |
+| `EXT:my_sitepackage/VERSION`             | the file inside the given extension                                |
+| `/srv/deploy/current/VERSION`            | absolute paths are used as given                                   |
 
-| Configuration | Description | Example |
-| --- | --- | --- |
-| Revision | Will only fetch the revision as project version | ![git revision example ](Documentation/Images/BasicGitFormatRevision.png) |
-| \[revision] Branch (default) | Will fetch the current revision and branch | ![git revision and branch example ](Documentation/Images/BasicGitFormatRevisionAndBranch.png) | 
-| \[revision] Tag | Will fetch the current revision and tag | ![git revision and tag example ](Documentation/Images/BasicGitFormatRevisionAndTag.png) | 
-| Branch | Will only fetch the current branch | ![git branch example ](Documentation/Images/BasicGitFormatRevisionBranch.png) |
-| Tag | Will only fetch the current tag | ![git tag example ](Documentation/Images/BasicGitFormatRevisionTag.png) | 
+A path ending with `/` is treated as a directory and `VERSION` is appended.
 
-## Roadmap to v1.0.0
- 
- - [x] Static VERSION file support
- - [x] Add ability to configure "VERSION"-file path
- - [x] GIT revision support
- - [x] GIT tag/branch based on revision support
- - [x] Add documentation of this extensions features
- - [x] Upload extension to packagist.org
- - [x] Upload extension to TER
- - [x] Support TYPO3 v9.4
- - [x] Support TYPO3 v9 LTS
- - [x] Achieve overall test coverage above 95%  
- - [x] Configure [TravisCI](https://travis-ci.org/KamiYang/project_version)
- - [x] Configure [StyleCI](https://github.styleci.io/repos/134700322)
- - [x] Configure [Coveralls](https://coveralls.io/github/KamiYang/project_version)
- - [x] Static VERSION value via extension configuration
+### Git
 
-### Milestone for v0.6.0
- - Ability to "hardcode" static project version via the TYPO3 backend
+Set `mode` to *GIT* (or *GIT (VERSION file as fallback)*) in the extension settings. The `git` binary must
+be available to the web server user and PHP's `exec()` must not be disabled. If git cannot be used, the
+fallback mode reads the VERSION file instead.
 
-## Note
-The TYPO3 v8 version of this extension will not be maintained after release 1.0.0! But this should be no problem because TYPO3 v8 only gets bugfixes.
-This means, version 1.0.0 should stay compatible with all further TYPO3 v8 releases!
+`gitFormat` controls what is displayed:
 
-After releasing version 1.0.0, which will be around the release of the first TYPO3 v9 LTS version, EXT:project_version will be refactored to php7.2 and will integrate TYPO3 v9 features.
+| Format                        | Example              |
+| ----------------------------- | -------------------- |
+| Revision                      | `a1b2c3d`            |
+| \[revision\] branch (default) | `[a1b2c3d] main`     |
+| \[revision\] tag              | `[a1b2c3d] v1.4.0`   |
+| Branch                        | `main`               |
+| Tag                           | `v1.4.0`             |
+
+### Static version
+
+Set `mode` to *Static Version* and put the value into `staticVersion`. Useful when the version is injected
+at deploy time via `config/system/additional.php`:
+
+```php
+$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['project_version']['mode'] = '3';
+$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['project_version']['staticVersion'] = getenv('APP_VERSION') ?: 'dev';
+```
+
+### Using the version in your own code
+
+`\KamiYang\ProjectVersion\Service\ProjectVersionService` is a public service and can be injected:
+
+```php
+public function __construct(private readonly ProjectVersionService $projectVersionService) {}
+
+$version = $this->projectVersionService->getProjectVersion()->getVersion();
+```
+
+`getVersion()` returns a `LLL:` label when no version could be resolved; check `isUnknown()` first.
+
+## Upgrading from 1.x
+
+Version 2.0 drops support for TYPO3 8.7 and 9.5 and requires PHP 8.2. Extension settings keep their names and
+values, so no reconfiguration is needed. Internal classes were renamed:
+
+| 1.x                                                          | 2.x                                                              |
+| ------------------------------------------------------------ | ---------------------------------------------------------------- |
+| `Backend\ToolbarItems\ProjectVersionSlot` (signal/slot)      | `Backend\EventListener\SystemInformationListener` (PSR-14)       |
+| `Enumeration\ProjectVersionModeEnumeration`                  | `Enumeration\ProjectVersionMode` (native enum)                   |
+| `Enumeration\GitCommandEnumeration`                          | `Enumeration\GitCommand`, `Enumeration\GitFormat` (native enums) |
+| `Configuration\ExtensionConfiguration` (static)              | `Configuration\ExtensionConfiguration` (injectable service)      |
+| `Facade\LocalizationUtilityFacade`, `Facade\SystemEnvironmentBuilderFacade` | removed                                           |
+
+## Development
+
+```bash
+composer install
+composer ci          # lint, php-cs-fixer, phpstan, phpunit
+composer fix:cs      # apply coding standard
+```
+
+A docker based environment for TYPO3 13, 14 and 15 is described in `.Build/README.md` after the first
+`composer install` (the directory is git-ignored; copy the compose files from this repository's history or
+create your own).
+
+## License
+
+GPL-3.0-or-later, see [LICENSE](LICENSE).

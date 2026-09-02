@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Facade;
@@ -18,21 +19,35 @@ namespace KamiYang\ProjectVersion\Facade;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
 /**
- * Class CommandUtilityFacade
+ * Thin wrapper around TYPO3's CommandUtility so shell access can be mocked in tests.
+ *
+ * @internal
  */
 class CommandUtilityFacade
 {
     /**
-     * Wrapper function for php exec function
-     * Needs to be central to have better control and possible fix for issues
+     * Execute a shell command and return the last line of its output.
      *
-     * @param string $command
-     * @param array|null $output
-     * @param int $returnValue
-     * @return string
+     * @param array<mixed>|null $output
      */
-    public function exec($command, &$output = null, &$returnValue = 0)
+    public function exec(string $command, ?array &$output = null, int &$returnValue = 0): string
     {
-        return CommandUtility::exec($command, $output, $returnValue);
+        $result = CommandUtility::exec($command, $output, $returnValue);
+
+        return $result === false ? '' : $result;
+    }
+
+    /**
+     * Check whether PHP's exec() function is usable in this environment.
+     */
+    public function isExecAvailable(): bool
+    {
+        if (!function_exists('exec')) {
+            return false;
+        }
+
+        $disabled = array_map('trim', explode(',', (string)ini_get('disable_functions')));
+
+        return !in_array('exec', $disabled, true);
     }
 }

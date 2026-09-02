@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Service;
@@ -16,176 +17,104 @@ namespace KamiYang\ProjectVersion\Service;
  */
 
 use KamiYang\ProjectVersion\Configuration\ExtensionConfiguration;
-use KamiYang\ProjectVersion\Enumeration\GitCommandEnumeration;
-use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
+use KamiYang\ProjectVersion\Enumeration\GitCommand;
+use KamiYang\ProjectVersion\Enumeration\ProjectVersionMode;
 use KamiYang\ProjectVersion\Facade\CommandUtilityFacade;
-use KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade;
-use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class ProjectVersionService
+ * Resolves the current project version based on the extension settings.
  */
-class ProjectVersionService implements SingletonInterface
+class ProjectVersionService
 {
-    /**
-     * @var \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade
-     */
-    protected $systemEnvironmentBuilderFacade;
-    /**
-     * @var \KamiYang\ProjectVersion\Facade\CommandUtilityFacade
-     */
-    protected $commandUtilityFacade;
+    public function __construct(
+        private readonly ExtensionConfiguration $extensionConfiguration,
+        private readonly CommandUtilityFacade $commandUtilityFacade,
+    ) {}
 
     /**
      * @api
      */
     public function getProjectVersion(): ProjectVersion
     {
-        $projectVersion = GeneralUtility::makeInstance(ProjectVersion::class);
+        $projectVersion = new ProjectVersion();
 
-        switch (ExtensionConfiguration::getMode()) {
-            case ProjectVersionModeEnumeration::STATIC_VERSION:
+        switch ($this->extensionConfiguration->getMode()) {
+            case ProjectVersionMode::StaticVersion:
                 $this->setStaticVersion($projectVersion);
                 break;
-            case ProjectVersionModeEnumeration::GIT:
+            case ProjectVersionMode::Git:
                 $this->setVersionFromGit($projectVersion);
                 break;
-            case ProjectVersionModeEnumeration::GIT_FILE_FALLBACK:
+            case ProjectVersionMode::GitFileFallback:
                 $this->setVersionFromGit($projectVersion);
-
-                if ($projectVersion->getVersion() === ProjectVersion::UNKNOWN_VERSION) {
-                    //if version is still unknown, try to resolve version by file
+                if ($projectVersion->isUnknown()) {
                     $this->setVersionFromFile($projectVersion);
                 }
                 break;
-            case ProjectVersionModeEnumeration::FILE:
-            default:
+            case ProjectVersionMode::File:
                 $this->setVersionFromFile($projectVersion);
+                break;
         }
 
         return $projectVersion;
     }
 
-    /**
-     * @param $revision
-     * @param $tag
-     * @param $branch
-     * @return string
-     */
-    private function formatVersionBasedOnConfiguration($revision, $tag, $branch): string
-    {
-        switch (ExtensionConfiguration::getGitFormat()) {
-            case GitCommandEnumeration::FORMAT_REVISION:
-                $format = $revision;
-                break;
-            case GitCommandEnumeration::FORMAT_REVISION_TAG:
-                $format = \sprintf('[%s] %s', $revision, $tag);
-                break;
-            case GitCommandEnumeration::FORMAT_BRANCH:
-                $format = $branch;
-                break;
-            case GitCommandEnumeration::FORMAT_TAG:
-                $format = $tag;
-                break;
-            case GitCommandEnumeration::FORMAT_REVISION_BRANCH:
-            default:
-                $format = \sprintf('[%s] %s', $revision, $branch);
-        }
-
-        return $format;
-    }
-
-    /**
-     * SystemEnvironmentBuilderFacade injector.
-     *
-     * @param \KamiYang\ProjectVersion\Facade\SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade
-     */
-    public function injectSystemEnvironmentBuilderFacade(SystemEnvironmentBuilderFacade $systemEnvironmentBuilderFacade)
-    {
-        $this->systemEnvironmentBuilderFacade = $systemEnvironmentBuilderFacade;
-    }
-
-    /**
-     * CommandUtilityFacade injector.
-     *
-     * @param \KamiYang\ProjectVersion\Facade\CommandUtilityFacade $commandUtilityFacade
-     */
-    public function injectCommandUtilityFacade(CommandUtilityFacade $commandUtilityFacade)
-    {
-        $this->commandUtilityFacade = $commandUtilityFacade;
-    }
-
-    /**
-     * @return bool
-     */
     protected function isGitAvailable(): bool
     {
-        return $this->systemEnvironmentBuilderFacade->isFunctionDisabled('exec') === false &&
-            // check if git exists
-            $this->commandUtilityFacade->exec('git --version', $_, $returnCode) &&
-            $returnCode === 0;
+        if (!$this->commandUtilityFacade->isExecAvailable()) {
+            return false;
+        }
+
+        $returnCode = 1;
+        $this->commandUtilityFacade->exec(GitCommand::Version->value, $output, $returnCode);
+
+        return $returnCode === 0;
     }
 
-    /**
-     * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
-     */
-    private function setStaticVersion(ProjectVersion $projectVersion)
+    private function setStaticVersion(ProjectVersion $projectVersion): void
     {
-        $projectVersion->setVersion(ExtensionConfiguration::getStaticVersion());
-    }
-
-    /**
-     * Resolve version by common VERSION-file.
-     *
-     * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
-     */
-    private function setVersionFromFile(ProjectVersion $projectVersion)
-    {
-        $versionFilePath = ExtensionConfiguration::getAbsVersionFilePath();
-        if (\file_exists($versionFilePath)) {
-            $versionFileContent = \file_get_contents($versionFilePath);
-            $projectVersion->setVersion($versionFileContent);
+        $staticVersion = $this->extensionConfiguration->getStaticVersion();
+        if ($staticVersion !== '') {
+            $projectVersion->setVersion($staticVersion);
         }
     }
 
-    /**
-     * @param \KamiYang\ProjectVersion\Service\ProjectVersion $projectVersion
-     */
-    private function setVersionFromGit(ProjectVersion $projectVersion)
+    private function setVersionFromFile(ProjectVersion $projectVersion): void
     {
-        if ($this->isGitAvailable() === false) {
+        $versionFilePath = $this->extensionConfiguration->getAbsVersionFilePath();
+        if ($versionFilePath === '' || !is_file($versionFilePath)) {
+            return;
+        }
+
+        $content = trim((string)file_get_contents($versionFilePath));
+        if ($content !== '') {
+            $projectVersion->setVersion($content);
+        }
+    }
+
+    private function setVersionFromGit(ProjectVersion $projectVersion): void
+    {
+        if (!$this->isGitAvailable()) {
             return;
         }
 
         $version = $this->getVersionByFormat();
-
-        if (!empty($version)) {
-            /*
-             * The icon identifier for "git" changed between TYPO3 v8 and v9.
-             * For TYPO3 v8 it's "sysinfo-git" and for v9 it's "information-git"
-             */
-            $gitIconIdentifier = (float)TYPO3_version < 9 ? 'sysinfo-git' : 'information-git';
-
+        if ($version !== '') {
             $projectVersion->setVersion($version);
-            $projectVersion->setIconIdentifier($gitIconIdentifier);
+            $projectVersion->setIconIdentifier(ProjectVersion::GIT_ICON_IDENTIFIER);
         }
     }
 
-    /**
-     * @return string
-     */
     private function getVersionByFormat(): string
     {
-        $branch = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_BRANCH));
-        $revision = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_REVISION));
-        $tag = \trim($this->commandUtilityFacade->exec(GitCommandEnumeration::CMD_TAG));
-        $format = '';
+        $branch = trim($this->commandUtilityFacade->exec(GitCommand::Branch->value));
+        $revision = trim($this->commandUtilityFacade->exec(GitCommand::Revision->value));
+        $tag = trim($this->commandUtilityFacade->exec(GitCommand::Tag->value));
 
-        if ($branch || $revision || $tag) {
-            $format = $this->formatVersionBasedOnConfiguration($revision, $tag, $branch);
+        if ($branch === '' && $revision === '' && $tag === '') {
+            return '';
         }
 
-        return $format;
+        return $this->extensionConfiguration->getGitFormat()->format($revision, $branch, $tag);
     }
 }

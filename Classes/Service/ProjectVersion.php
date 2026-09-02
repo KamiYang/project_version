@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Service;
@@ -15,74 +16,51 @@ namespace KamiYang\ProjectVersion\Service;
  * LICENSE file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\SingletonInterface;
-
 /**
- * Class ProjectVersion
+ * Value object holding the resolved project version and how it is displayed.
  */
-class ProjectVersion implements SingletonInterface
+final class ProjectVersion
 {
-    const UNKNOWN_VERSION = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
+    public const UNKNOWN_VERSION = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
+    public const DEFAULT_TITLE = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version';
+    public const DEFAULT_ICON_IDENTIFIER = 'information-project-version';
+    public const GIT_ICON_IDENTIFIER = 'information-git';
 
-    /**
-     * @var string $title
-     */
-    protected $title = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version';
+    private string $title = self::DEFAULT_TITLE;
+    private string $version = self::UNKNOWN_VERSION;
+    private string $iconIdentifier = self::DEFAULT_ICON_IDENTIFIER;
 
-    /**
-     * @var string $version
-     */
-    protected $version = self::UNKNOWN_VERSION;
-
-    /**
-     * @var string
-     */
-    protected $iconIdentifier = 'information-project-version';
-
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
-    public function setVersion(string $version)
+    public function setVersion(string $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return string
-     */
+    public function isUnknown(): bool
+    {
+        return $this->version === self::UNKNOWN_VERSION;
+    }
+
     public function getIconIdentifier(): string
     {
         return $this->iconIdentifier;
     }
 
-    /**
-     * @param string $iconIdentifier
-     */
-    public function setIconIdentifier(string $iconIdentifier)
+    public function setIconIdentifier(string $iconIdentifier): void
     {
         $this->iconIdentifier = $iconIdentifier;
     }

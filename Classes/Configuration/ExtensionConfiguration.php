@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Configuration;
@@ -15,134 +16,92 @@ namespace KamiYang\ProjectVersion\Configuration;
  * LICENSE file that was distributed with this source code.
  */
 
-use KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration;
-use TYPO3\CMS\Core\SingletonInterface;
+use KamiYang\ProjectVersion\Enumeration\GitFormat;
+use KamiYang\ProjectVersion\Enumeration\ProjectVersionMode;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration as CoreExtensionConfiguration;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
- * Class ExtensionConfiguration
+ * Typed access to the extension settings of EXT:project_version.
  */
-final class ExtensionConfiguration implements SingletonInterface
+class ExtensionConfiguration
 {
-    /**
-     * Extension configuration.
-     *
-     * @var array
-     */
-    private static $configuration = [];
+    public const EXTENSION_KEY = 'project_version';
+    public const DEFAULT_VERSION_FILE_NAME = 'VERSION';
 
     /**
-     * Relative file path of the VERSION-file. Blank equals const 'PATH_site'.
-     *
-     * @var string
+     * @var array<string, mixed>
      */
-    private static $versionFilePath = '';
+    private array $configuration;
 
-    /**
-     * Indicator for the fetching method.
-     *
-     * @var string
-     * @see \KamiYang\ProjectVersion\Enumeration\ProjectVersionModeEnumeration
-     */
-    private static $mode = ProjectVersionModeEnumeration::FILE;
-
-    /**
-     * @var string
-     */
-    private static $gitFormat = '';
-
-    /**
-     * @var string
-     */
-    private static $staticVersion = '';
-
-    /**
-     * Fetch absolute version filename.
-     *
-     * @return string
-     */
-    public static function getAbsVersionFilePath(): string
+    public function __construct(CoreExtensionConfiguration $coreExtensionConfiguration)
     {
-        return GeneralUtility::getFileAbsFileName(self::getVersionFilePath());
-    }
-
-    /**
-     * @return string
-     */
-    public static function getVersionFilePath(): string
-    {
-        return self::$versionFilePath;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getMode(): string
-    {
-        return self::$mode;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getGitFormat(): string
-    {
-        return self::$gitFormat;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getStaticVersion(): string
-    {
-        return self::$staticVersion;
-    }
-
-    public function __construct()
-    {
-        self::$configuration = $this->getExtensionConfigurationFromGlobals();
-
-        self::$versionFilePath = $this->resolveVersionFilePath();
-        self::$mode = self::$configuration['mode'];
-        self::$gitFormat = self::$configuration['gitFormat'];
-        self::$staticVersion = self::$configuration['staticVersion'];
-    }
-
-    /**
-     * @return array
-     */
-    private function getExtensionConfigurationFromGlobals(): array
-    {
-        $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['project_version'];
-
-        if (is_string($configuration)) {
-            $configuration = @unserialize($configuration);
+        try {
+            $configuration = $coreExtensionConfiguration->get(self::EXTENSION_KEY);
+        } catch (\Throwable) {
+            // Extension settings have not been written yet: fall back to the defaults below.
+            $configuration = [];
         }
 
-        return $configuration ?? [];
+        $this->configuration = is_array($configuration) ? $configuration : [];
     }
 
     /**
-     * @return string
+     * Configured path of the version file. A directory (trailing slash) is completed with 'VERSION'.
      */
-    private function resolveVersionFilePath(): string
+    public function getVersionFilePath(): string
     {
-        $pathFromConfiguration = self::$configuration['versionFilePath'] ?? '';
+        $path = trim((string)($this->configuration['versionFilePath'] ?? ''));
 
-        if (empty($pathFromConfiguration) || $this->isDirectory($pathFromConfiguration)) {
-            $pathFromConfiguration .= 'VERSION';
+        if ($path === '' || str_ends_with($path, '/')) {
+            $path .= self::DEFAULT_VERSION_FILE_NAME;
         }
 
-        return $pathFromConfiguration;
+        return $path;
     }
 
     /**
-     * @param string $pathFromConfiguration
-     * @return bool
+     * Absolute path of the version file.
+     *
+     * Resolution order for relative paths: 'EXT:' notation, the public web directory, then the
+     * project directory. Absolute paths are used as given. Returns an empty string if the file
+     * does not exist anywhere.
      */
-    private function isDirectory(string $pathFromConfiguration): bool
+    public function getAbsVersionFilePath(): string
     {
-        return StringUtility::endsWith($pathFromConfiguration, '/') === true;
+        $path = $this->getVersionFilePath();
+
+        if (str_starts_with($path, 'EXT:')) {
+            return GeneralUtility::getFileAbsFileName($path);
+        }
+
+        if (str_starts_with($path, '/')) {
+            return is_file($path) ? $path : '';
+        }
+
+        foreach ([Environment::getPublicPath(), Environment::getProjectPath()] as $basePath) {
+            $candidate = rtrim($basePath, '/') . '/' . $path;
+            if (is_file($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return '';
+    }
+
+    public function getMode(): ProjectVersionMode
+    {
+        return ProjectVersionMode::tryFrom((string)($this->configuration['mode'] ?? '')) ?? ProjectVersionMode::File;
+    }
+
+    public function getGitFormat(): GitFormat
+    {
+        return GitFormat::tryFrom((string)($this->configuration['gitFormat'] ?? '')) ?? GitFormat::RevisionBranch;
+    }
+
+    public function getStaticVersion(): string
+    {
+        return trim((string)($this->configuration['staticVersion'] ?? ''));
     }
 }

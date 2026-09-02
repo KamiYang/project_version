@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Tests\Unit\Service;
@@ -16,87 +17,33 @@ namespace KamiYang\ProjectVersion\Tests\Unit\Service;
  */
 
 use KamiYang\ProjectVersion\Service\ProjectVersion;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * Class ProjectVersionTest
- */
-class ProjectVersionTest extends UnitTestCase
+final class ProjectVersionTest extends UnitTestCase
 {
-    /**
-     * @var \KamiYang\ProjectVersion\Service\ProjectVersion
-     */
-    private $subject;
-
-    protected function setUp()
+    #[Test]
+    public function hasSensibleDefaults(): void
     {
-        $this->subject = new ProjectVersion();
+        $subject = new ProjectVersion();
+
+        self::assertSame(ProjectVersion::DEFAULT_TITLE, $subject->getTitle());
+        self::assertSame(ProjectVersion::UNKNOWN_VERSION, $subject->getVersion());
+        self::assertSame('information-project-version', $subject->getIconIdentifier());
+        self::assertTrue($subject->isUnknown());
     }
 
-    /**
-     * @test
-     */
-    public function getTitleShouldReturnInitialValue()
+    #[Test]
+    public function settersChangeState(): void
     {
-        static::assertSame(
-            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version',
-            $this->subject->getTitle()
-        );
-    }
+        $subject = new ProjectVersion();
+        $subject->setTitle('Title');
+        $subject->setVersion('1.0.0');
+        $subject->setIconIdentifier('information-git');
 
-    /**
-     * @test
-     */
-    public function setTitleShouldSetPropertyTitle()
-    {
-        $newValue = 'Project Version is awesome!';
-
-        $this->subject->setTitle($newValue);
-
-        static::assertAttributeSame($newValue, 'title', $this->subject);
-    }
-
-    /**
-     * @test
-     */
-    public function initialVersionValueShouldBeLLLString()
-    {
-        static::assertAttributeSame(
-            'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown',
-            'version',
-            $this->subject
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function setVersionShouldSetPropertyVersion()
-    {
-        $newValue = 'Project Version is awesome!';
-
-        $this->subject->setVersion($newValue);
-
-        static::assertAttributeSame($newValue, 'version', $this->subject);
-    }
-
-    /**
-     * @test
-     */
-    public function getIconIdentifierShouldReturnInitialValue()
-    {
-        static::assertSame('information-project-version', $this->subject->getIconIdentifier());
-    }
-
-    /**
-     * @test
-     */
-    public function setIconIdentifierShouldSetPropertyIconIdentifier()
-    {
-        $newValue = 'Project Version is awesome!';
-
-        $this->subject->setIconIdentifier($newValue);
-
-        static::assertAttributeSame($newValue, 'iconIdentifier', $this->subject);
+        self::assertSame('Title', $subject->getTitle());
+        self::assertSame('1.0.0', $subject->getVersion());
+        self::assertSame('information-git', $subject->getIconIdentifier());
+        self::assertFalse($subject->isUnknown());
     }
 }

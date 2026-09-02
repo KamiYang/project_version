@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  tests:
+    name: TYPO3 ${{ matrix.typo3 }} / PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { typo3: '13', php: '8.2' }
+          - { typo3: '13', php: '8.3' }
+          - { typo3: '13', php: '8.4' }
+          - { typo3: '14', php: '8.2' }
+          - { typo3: '14', php: '8.3' }
+          - { typo3: '14', php: '8.4' }
+          - { typo3: '14', php: '8.5' }
+          - { typo3: '15', php: '8.5', experimental: true }
+    continue-on-error: ${{ matrix.experimental == true }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: intl, mbstring, xml, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Select TYPO3 version
+        run: |
+          if [ "${{ matrix.typo3 }}" = "15" ]; then
+            composer config minimum-stability dev
+            composer config prefer-stable true
+            composer require --no-update typo3/cms-core:"15.0.x-dev" typo3/cms-backend:"15.0.x-dev"
+            composer require --no-update --dev typo3/testing-framework:"10.x-dev"
+          else
+            composer require --no-update typo3/cms-core:"^${{ matrix.typo3 }}" typo3/cms-backend:"^${{ matrix.typo3 }}"
+          fi
+
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress --prefer-dist
+
+      - run: composer ci:lint
+      - run: composer ci:cs
+      - run: composer ci:phpstan
+      - run: composer ci:test

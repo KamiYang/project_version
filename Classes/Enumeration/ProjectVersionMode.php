@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KamiYang\ProjectVersion\Enumeration;
@@ -16,17 +17,12 @@ namespace KamiYang\ProjectVersion\Enumeration;
  */
 
 /**
- * Class GitCommandEnumeration
+ * How the project version is resolved. Values match the options in ext_conf_template.txt.
  */
-final class GitCommandEnumeration
+enum ProjectVersionMode: string
 {
-    const CMD_BRANCH = 'git rev-parse --abbrev-ref HEAD';
-    const CMD_REVISION = 'git rev-parse --short HEAD';
-    const CMD_TAG = 'git describe --tags';
-
-    const FORMAT_REVISION = '0';
-    const FORMAT_REVISION_BRANCH = '1';
-    const FORMAT_REVISION_TAG = '2';
-    const FORMAT_BRANCH = '3';
-    const FORMAT_TAG = '4';
+    case File = '0';
+    case Git = '1';
+    case GitFileFallback = '2';
+    case StaticVersion = '3';
 }

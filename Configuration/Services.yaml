@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  KamiYang\ProjectVersion\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Enumeration/*'
+      - '../Classes/Service/ProjectVersion.php'
+
+  KamiYang\ProjectVersion\Service\ProjectVersionService:
+    public: true

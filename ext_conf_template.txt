@@ -4,7 +4,7 @@ versionFilePath = VERSION
 # cat=basic/enable; type=options[VERSION File=0,GIT=1,GIT (VERSION file as fallback)=2,Static Version=3]; label=Get project version by:
 mode = 0
 
-# cat=basic/enable; type=options[Revision=0,[revision] branch=1,[revision] tag=2,Branch=3,Tag=4]; label=Get project version by:
+# cat=basic/enable; type=options[Revision=0,[revision] branch=1,[revision] tag=2,Branch=3,Tag=4]; label=Git format (only used if basic.mode is GIT):
 gitFormat = 1
 
 # cat=basic/enable; type=string; label=Static version value (will only have effect if 'basic.mode' is set to 'Static Version')

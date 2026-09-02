@@ -22,14 +22,15 @@
     "kamiyang/project_version": "self.version"
   },
   "require": {
-    "typo3/cms-backend": "9.5.*",
-    "typo3/cms-extbase": "9.5.*",
-    "typo3/cms-extensionmanager": "9.5.*"
+    "php": "^8.2",
+    "typo3/cms-backend": "^13.4 || ^14.0 || ^15.0",
+    "typo3/cms-core": "^13.4 || ^14.0 || ^15.0"
   },
   "require-dev": {
-    "nimut/testing-framework": "~4.1.1",
-    "phpunit/phpunit": "~6.5",
-    "satooshi/php-coveralls": "^2.0"
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^11.5 || ^12.0",
+    "typo3/coding-standards": "^0.9",
+    "typo3/testing-framework": "^9.6 || ^10.0"
   },
   "autoload": {
     "psr-4": {
@@ -42,28 +43,38 @@
     }
   },
   "scripts": {
-    "create-dummy-version-file": "echo \"9.0.42\" > .Build/web/VERSION",
-    "create-extension-directory": "mkdir -p .Build/web/typo3conf/ext",
-    "link-package": "ln -snvf ../../../../. .Build/web/typo3conf/ext/project_version",
-    "post-update-cmd": [
-      "@create-extension-directory",
-      "@link-package",
-      "@create-dummy-version-file"
-    ]
+    "post-autoload-dump": [
+      "@link-extension"
+    ],
+    "link-extension": [
+      "mkdir -p .Build/public/typo3conf/ext",
+      "[ -e .Build/public/typo3conf/ext/project_version ] || ln -snf ../../../../. .Build/public/typo3conf/ext/project_version"
+    ],
+    "ci:lint": "find Classes Configuration Tests ext_emconf.php -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -d display_errors=stderr > /dev/null",
+    "ci:cs": "php-cs-fixer fix --dry-run --diff",
+    "ci:phpstan": "phpstan analyse --no-progress",
+    "ci:test": "phpunit -c phpunit.xml",
+    "ci": [
+      "@ci:lint",
+      "@ci:cs",
+      "@ci:phpstan",
+      "@ci:test"
+    ],
+    "fix:cs": "php-cs-fixer fix"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
     "bin-dir": ".Build/bin",
-    "platform": {
-      "php": "7.2"
+    "sort-packages": true,
+    "allow-plugins": {
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
     }
   },
   "extra": {
     "typo3/cms": {
       "extension-key": "project_version",
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "app-dir": ".Build",
-      "web-dir": ".Build/web"
+      "web-dir": ".Build/public"
     }
   }
 }
