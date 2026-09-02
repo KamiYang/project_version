@@ -46,7 +46,7 @@ class CommandUtilityFacade
             return false;
         }
 
-        $disabled = array_map('trim', explode(',', (string)ini_get('disable_functions')));
+        $disabled = array_map(trim(...), explode(',', (string)ini_get('disable_functions')));
 
         return !in_array('exec', $disabled, true);
     }

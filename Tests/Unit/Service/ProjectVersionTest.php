@@ -25,25 +25,25 @@ final class ProjectVersionTest extends UnitTestCase
     #[Test]
     public function hasSensibleDefaults(): void
     {
-        $subject = new ProjectVersion();
+        $projectVersion = new ProjectVersion();
 
-        self::assertSame(ProjectVersion::DEFAULT_TITLE, $subject->getTitle());
-        self::assertSame(ProjectVersion::UNKNOWN_VERSION, $subject->getVersion());
-        self::assertSame('information-project-version', $subject->getIconIdentifier());
-        self::assertTrue($subject->isUnknown());
+        self::assertSame(ProjectVersion::DEFAULT_TITLE, $projectVersion->getTitle());
+        self::assertSame(ProjectVersion::UNKNOWN_VERSION, $projectVersion->getVersion());
+        self::assertSame('information-project-version', $projectVersion->getIconIdentifier());
+        self::assertTrue($projectVersion->isUnknown());
     }
 
     #[Test]
     public function settersChangeState(): void
     {
-        $subject = new ProjectVersion();
-        $subject->setTitle('Title');
-        $subject->setVersion('1.0.0');
-        $subject->setIconIdentifier('information-git');
+        $projectVersion = new ProjectVersion();
+        $projectVersion->setTitle('Title');
+        $projectVersion->setVersion('1.0.0');
+        $projectVersion->setIconIdentifier('information-git');
 
-        self::assertSame('Title', $subject->getTitle());
-        self::assertSame('1.0.0', $subject->getVersion());
-        self::assertSame('information-git', $subject->getIconIdentifier());
-        self::assertFalse($subject->isUnknown());
+        self::assertSame('Title', $projectVersion->getTitle());
+        self::assertSame('1.0.0', $projectVersion->getVersion());
+        self::assertSame('information-git', $projectVersion->getIconIdentifier());
+        self::assertFalse($projectVersion->isUnknown());
     }
 }

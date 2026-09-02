@@ -50,6 +50,7 @@ class ProjectVersionService
                 if ($projectVersion->isUnknown()) {
                     $this->setVersionFromFile($projectVersion);
                 }
+
                 break;
             case ProjectVersionMode::File:
                 $this->setVersionFromFile($projectVersion);

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Project Version',
-    'description' => 'Displays current project version based on \'VERSION\' file or GIT revision.',
+    'description' => "Displays current project version based on 'VERSION' file or GIT revision.",
     'category' => 'misc',
     'state' => 'stable',
     'clearCacheOnLoad' => 1,

@@ -22,12 +22,17 @@ namespace KamiYang\ProjectVersion\Service;
 final class ProjectVersion
 {
     public const UNKNOWN_VERSION = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version.unknown';
+
     public const DEFAULT_TITLE = 'LLL:EXT:project_version/Resources/Private/Language/Backend.xlf:toolbarItems.sysinfo.project-version';
+
     public const DEFAULT_ICON_IDENTIFIER = 'information-project-version';
+
     public const GIT_ICON_IDENTIFIER = 'information-git';
 
     private string $title = self::DEFAULT_TITLE;
+
     private string $version = self::UNKNOWN_VERSION;
+
     private string $iconIdentifier = self::DEFAULT_ICON_IDENTIFIER;
 
     public function getTitle(): string

@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ExtensionConfiguration
 {
     public const EXTENSION_KEY = 'project_version';
+
     public const DEFAULT_VERSION_FILE_NAME = 'VERSION';
 
     /**

@@ -44,12 +44,12 @@ final class ExtensionConfigurationTest extends UnitTestCase
         $core = self::createStub(CoreExtensionConfiguration::class);
         $core->method('get')->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException('', 1));
 
-        $subject = new ExtensionConfiguration($core);
+        $extensionConfiguration = new ExtensionConfiguration($core);
 
-        self::assertSame('VERSION', $subject->getVersionFilePath());
-        self::assertSame(ProjectVersionMode::File, $subject->getMode());
-        self::assertSame(GitFormat::RevisionBranch, $subject->getGitFormat());
-        self::assertSame('', $subject->getStaticVersion());
+        self::assertSame('VERSION', $extensionConfiguration->getVersionFilePath());
+        self::assertSame(ProjectVersionMode::File, $extensionConfiguration->getMode());
+        self::assertSame(GitFormat::RevisionBranch, $extensionConfiguration->getGitFormat());
+        self::assertSame('', $extensionConfiguration->getStaticVersion());
     }
 
     /**

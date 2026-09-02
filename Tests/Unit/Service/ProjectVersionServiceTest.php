@@ -82,10 +82,10 @@ final class ProjectVersionServiceTest extends UnitTestCase
     #[Test]
     public function versionStaysUnknownIfVersionFileIsNotFound(): void
     {
-        $actual = $this->createSubject(['versionFilePath' => '/some/not/existing/path'])->getProjectVersion();
+        $projectVersion = $this->createSubject(['versionFilePath' => '/some/not/existing/path'])->getProjectVersion();
 
-        self::assertTrue($actual->isUnknown());
-        self::assertSame(ProjectVersion::DEFAULT_ICON_IDENTIFIER, $actual->getIconIdentifier());
+        self::assertTrue($projectVersion->isUnknown());
+        self::assertSame(ProjectVersion::DEFAULT_ICON_IDENTIFIER, $projectVersion->getIconIdentifier());
     }
 
     /**
@@ -102,28 +102,28 @@ final class ProjectVersionServiceTest extends UnitTestCase
     #[DataProvider('versionFilePathDataProvider')]
     public function versionIsReadFromFile(string $versionFilePath): void
     {
-        $actual = $this->createSubject(['versionFilePath' => $versionFilePath])->getProjectVersion();
+        $projectVersion = $this->createSubject(['versionFilePath' => $versionFilePath])->getProjectVersion();
 
-        self::assertSame('1.0.1', $actual->getVersion());
+        self::assertSame('1.0.1', $projectVersion->getVersion());
     }
 
     #[Test]
     public function staticVersionIsUsed(): void
     {
-        $actual = $this->createSubject([
+        $projectVersion = $this->createSubject([
             'mode' => ProjectVersionMode::StaticVersion->value,
             'staticVersion' => '4.2.0',
         ])->getProjectVersion();
 
-        self::assertSame('4.2.0', $actual->getVersion());
+        self::assertSame('4.2.0', $projectVersion->getVersion());
     }
 
     #[Test]
     public function emptyStaticVersionStaysUnknown(): void
     {
-        $actual = $this->createSubject(['mode' => ProjectVersionMode::StaticVersion->value])->getProjectVersion();
+        $projectVersion = $this->createSubject(['mode' => ProjectVersionMode::StaticVersion->value])->getProjectVersion();
 
-        self::assertTrue($actual->isUnknown());
+        self::assertTrue($projectVersion->isUnknown());
     }
 
     #[Test]
@@ -134,9 +134,9 @@ final class ProjectVersionServiceTest extends UnitTestCase
         $facade->expects($this->never())->method('exec');
         $this->commandUtilityFacade = $facade;
 
-        $actual = $this->createSubject(['mode' => ProjectVersionMode::Git->value])->getProjectVersion();
+        $projectVersion = $this->createSubject(['mode' => ProjectVersionMode::Git->value])->getProjectVersion();
 
-        self::assertTrue($actual->isUnknown());
+        self::assertTrue($projectVersion->isUnknown());
     }
 
     #[Test]
@@ -153,9 +153,9 @@ final class ProjectVersionServiceTest extends UnitTestCase
         );
         $this->commandUtilityFacade = $facade;
 
-        $actual = $this->createSubject(['mode' => ProjectVersionMode::Git->value])->getProjectVersion();
+        $projectVersion = $this->createSubject(['mode' => ProjectVersionMode::Git->value])->getProjectVersion();
 
-        self::assertTrue($actual->isUnknown());
+        self::assertTrue($projectVersion->isUnknown());
     }
 
     /**
@@ -172,17 +172,17 @@ final class ProjectVersionServiceTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('gitFormatDataProvider')]
-    public function gitVersionIsFormattedAsConfigured(GitFormat $format, string $expected): void
+    public function gitVersionIsFormattedAsConfigured(GitFormat $gitFormat, string $expected): void
     {
         $this->gitReturns('main', 'abc1234', 'v1.0.0');
 
-        $actual = $this->createSubject([
+        $projectVersion = $this->createSubject([
             'mode' => ProjectVersionMode::Git->value,
-            'gitFormat' => $format->value,
+            'gitFormat' => $gitFormat->value,
         ])->getProjectVersion();
 
-        self::assertSame($expected, $actual->getVersion());
-        self::assertSame(ProjectVersion::GIT_ICON_IDENTIFIER, $actual->getIconIdentifier());
+        self::assertSame($expected, $projectVersion->getVersion());
+        self::assertSame(ProjectVersion::GIT_ICON_IDENTIFIER, $projectVersion->getIconIdentifier());
     }
 
     #[Test]
@@ -190,10 +190,10 @@ final class ProjectVersionServiceTest extends UnitTestCase
     {
         $this->gitReturns('', '', '');
 
-        $actual = $this->createSubject(['mode' => ProjectVersionMode::GitFileFallback->value])->getProjectVersion();
+        $projectVersion = $this->createSubject(['mode' => ProjectVersionMode::GitFileFallback->value])->getProjectVersion();
 
-        self::assertSame('1.0.1', $actual->getVersion());
-        self::assertSame(ProjectVersion::DEFAULT_ICON_IDENTIFIER, $actual->getIconIdentifier());
+        self::assertSame('1.0.1', $projectVersion->getVersion());
+        self::assertSame(ProjectVersion::DEFAULT_ICON_IDENTIFIER, $projectVersion->getIconIdentifier());
     }
 
     #[Test]
@@ -201,8 +201,8 @@ final class ProjectVersionServiceTest extends UnitTestCase
     {
         $this->gitReturns('main', 'abc1234', '');
 
-        $actual = $this->createSubject(['mode' => ProjectVersionMode::GitFileFallback->value])->getProjectVersion();
+        $projectVersion = $this->createSubject(['mode' => ProjectVersionMode::GitFileFallback->value])->getProjectVersion();
 
-        self::assertSame('[abc1234] main', $actual->getVersion());
+        self::assertSame('[abc1234] main', $projectVersion->getVersion());
     }
 }

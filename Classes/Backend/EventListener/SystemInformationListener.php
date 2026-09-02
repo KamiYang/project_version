@@ -25,11 +25,11 @@ use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
  * Adds the project version to the "System Information" toolbar dropdown in the TYPO3 backend.
  */
 #[AsEventListener(identifier: 'project-version/system-information')]
-final class SystemInformationListener
+final readonly class SystemInformationListener
 {
     public function __construct(
-        private readonly ProjectVersionService $projectVersionService,
-        private readonly LanguageServiceFactory $languageServiceFactory,
+        private ProjectVersionService $projectVersionService,
+        private LanguageServiceFactory $languageServiceFactory,
     ) {}
 
     public function __invoke(SystemInformationToolbarCollectorEvent $event): void
