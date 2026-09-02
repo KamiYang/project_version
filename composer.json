@@ -29,6 +29,7 @@
   "require-dev": {
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^11.5 || ^12.0",
+    "rector/rector": "^2.0",
     "typo3/coding-standards": "^0.9",
     "typo3/testing-framework": "^9.6 || ^10.0"
   },
@@ -53,14 +54,20 @@
     "ci:lint": "find Classes Configuration Tests ext_emconf.php -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -d display_errors=stderr > /dev/null",
     "ci:cs": "php-cs-fixer fix --dry-run --diff",
     "ci:phpstan": "phpstan analyse --no-progress",
+    "ci:rector": "rector process --dry-run --no-progress-bar",
     "ci:test": "phpunit -c phpunit.xml",
     "ci": [
       "@ci:lint",
       "@ci:cs",
+      "@ci:rector",
       "@ci:phpstan",
       "@ci:test"
     ],
-    "fix:cs": "php-cs-fixer fix"
+    "fix:cs": "php-cs-fixer fix",
+    "fix:rector": [
+      "rector process --no-progress-bar",
+      "@fix:cs"
+    ]
   },
   "config": {
     "vendor-dir": ".Build/vendor",

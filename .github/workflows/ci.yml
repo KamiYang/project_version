@@ -48,5 +48,6 @@ jobs:
 
       - run: composer ci:lint
       - run: composer ci:cs
+      - run: composer ci:rector
       - run: composer ci:phpstan
       - run: composer ci:test

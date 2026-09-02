@@ -5,7 +5,7 @@ $config->getFinder()
     ->in(__DIR__ . '/Classes')
     ->in(__DIR__ . '/Configuration')
     ->in(__DIR__ . '/Tests')
-    ->append([__FILE__, __DIR__ . '/ext_emconf.php']);
+    ->append([__FILE__, __DIR__ . '/ext_emconf.php', __DIR__ . '/rector.php']);
 $config->setCacheFile(__DIR__ . '/.Build/.php-cs-fixer.cache');
 
 return $config;
